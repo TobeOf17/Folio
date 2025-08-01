@@ -1,0 +1,69 @@
+package com.Folio.attendance_app.model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "shift")
+public class Shift {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "shift_id")
+    private int shiftId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unit_id", nullable = false)
+    private Unit unit;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shift_type_id", nullable = false)
+    private ShiftType shiftType;
+
+
+
+    public Shift() {
+    }
+
+    public Shift(ShiftType shiftType, Unit unit) {
+        this.shiftType = shiftType;
+        this.unit = unit;
+    }
+
+    public Shift(int shiftId, Unit unit, ShiftType shiftType) {
+        this.shiftId = shiftId;
+        this.unit = unit;
+        this.shiftType = shiftType;
+    }
+
+    public int getShiftId() {
+        return shiftId;
+    }
+
+    public void setShiftId(int shiftId) {
+        this.shiftId = shiftId;
+    }
+
+    public Unit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Unit unit) {
+        this.unit = unit;
+    }
+
+    public ShiftType getShiftType() {
+        return shiftType;
+    }
+
+    public void setShiftType(ShiftType shiftType) {
+        this.shiftType = shiftType;
+    }
+
+    @Override
+    public String toString() {
+        return "Shift{" +
+                "shiftId=" + shiftId +
+                ", unit=" + unit +
+                ", shiftType=" + shiftType +
+                '}';
+    }
+}
