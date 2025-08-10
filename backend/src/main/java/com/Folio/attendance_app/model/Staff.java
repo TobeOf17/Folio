@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "staff")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})  // Add this line
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,14 +42,14 @@ public class Staff {
     @Size(min = 8)
     private String hashedPassword;
 
-    // FIXED: Changed to EAGER fetch to avoid proxy issues
-    @ManyToOne(fetch = FetchType.EAGER)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Role role;
 
-    // FIXED: Changed to EAGER fetch to avoid proxy issues
-    @ManyToOne(fetch = FetchType.EAGER)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit_id", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Unit unit;
@@ -64,7 +64,7 @@ public class Staff {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    // Rest of your constructors and methods remain the same...
+
     public Staff() {
     }
 
@@ -110,7 +110,7 @@ public class Staff {
         this.hashedPassword = hashedPassword;
     }
 
-    // All your getters and setters remain the same...
+
     public int getStaffId() {
         return staffId;
     }

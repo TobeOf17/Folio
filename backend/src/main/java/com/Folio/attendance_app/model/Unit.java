@@ -9,7 +9,7 @@ public class Unit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "unit_id") // on the unitId field
+    @Column(name = "unit_id")
     private int unitId;
     private String name;
 

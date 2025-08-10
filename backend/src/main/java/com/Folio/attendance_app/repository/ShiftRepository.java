@@ -28,7 +28,7 @@ public interface ShiftRepository extends JpaRepository<Shift, Integer> {
     boolean existsByUnitAndShiftType(Unit unit, ShiftType shiftType);
 
     // Find shifts by unit ID
-    @Query("SELECT s FROM Shift s WHERE s.unit.id = :unitId")
+    @Query("SELECT s FROM Shift s WHERE s.unit.unitId = :unitId")
     List<Shift> findByUnitId(@Param("unitId") int unitId);
 
     // Find shifts by shift type ID
