@@ -1,6 +1,7 @@
 package com.Folio.attendance_app.controller;
 
 import com.Folio.attendance_app.model.*;
+import com.Folio.attendance_app.service.SessionService;
 import com.Folio.attendance_app.service.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,8 @@ import java.util.Map;
 public class AdminController {
 
     @Autowired
+    private SessionService sessionService;
+    @Autowired
     private UserManagementService userManagementService;
 
     // ==================== DASHBOARD ====================
@@ -25,13 +28,12 @@ public class AdminController {
     /**
      * Get dashboard statistics
      */
+
     @GetMapping("/dashboard")
     public ResponseEntity<?> getDashboard(HttpSession session) {
         try {
-            if (!isAdmin(session)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Access denied. Admin privileges required."));
-            }
+            ResponseEntity<?> adminCheck = validateAdminAccess(session);
+            if (adminCheck != null) return adminCheck;
 
             UserManagementService.DashboardStats stats = userManagementService.getDashboardStats();
             return ResponseEntity.ok(stats);
@@ -50,10 +52,8 @@ public class AdminController {
     @GetMapping("/roles")
     public ResponseEntity<?> getAllRoles(HttpSession session) {
         try {
-            if (!isAdmin(session)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Access denied. Admin privileges required."));
-            }
+            ResponseEntity<?> adminCheck = validateAdminAccess(session);
+            if (adminCheck != null) return adminCheck;
 
             List<Role> roles = userManagementService.getAllRoles();
             return ResponseEntity.ok(roles);
@@ -70,10 +70,8 @@ public class AdminController {
     @GetMapping("/roles/{id}")
     public ResponseEntity<?> getRoleById(@PathVariable Integer id, HttpSession session) {
         try {
-            if (!isAdmin(session)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Access denied. Admin privileges required."));
-            }
+            ResponseEntity<?> adminCheck = validateAdminAccess(session);
+            if (adminCheck != null) return adminCheck;
 
             Role role = userManagementService.getRoleById(id);
             return ResponseEntity.ok(role);
@@ -90,10 +88,8 @@ public class AdminController {
     @PostMapping("/roles")
     public ResponseEntity<?> createRole(@Valid @RequestBody Role role, HttpSession session) {
         try {
-            if (!isAdmin(session)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Access denied. Admin privileges required."));
-            }
+            ResponseEntity<?> adminCheck = validateAdminAccess(session);
+            if (adminCheck != null) return adminCheck;
 
             Role createdRole = userManagementService.createRole(role);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdRole);
@@ -110,10 +106,8 @@ public class AdminController {
     @PutMapping("/roles/{id}")
     public ResponseEntity<?> updateRole(@PathVariable Integer id, @Valid @RequestBody Role role, HttpSession session) {
         try {
-            if (!isAdmin(session)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Access denied. Admin privileges required."));
-            }
+            ResponseEntity<?> adminCheck = validateAdminAccess(session);
+            if (adminCheck != null) return adminCheck;
 
             Role updatedRole = userManagementService.updateRole(id, role);
             return ResponseEntity.ok(updatedRole);
@@ -130,10 +124,8 @@ public class AdminController {
     @DeleteMapping("/roles/{id}")
     public ResponseEntity<?> deleteRole(@PathVariable Integer id, HttpSession session) {
         try {
-            if (!isAdmin(session)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Access denied. Admin privileges required."));
-            }
+            ResponseEntity<?> adminCheck = validateAdminAccess(session);
+            if (adminCheck != null) return adminCheck;
 
             userManagementService.deleteRole(id);
             return ResponseEntity.ok(Map.of("message", "Role deleted successfully"));
@@ -152,10 +144,8 @@ public class AdminController {
     @GetMapping("/units")
     public ResponseEntity<?> getAllUnits(HttpSession session) {
         try {
-            if (!isAdmin(session)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Access denied. Admin privileges required."));
-            }
+            ResponseEntity<?> adminCheck = validateAdminAccess(session);
+            if (adminCheck != null) return adminCheck;
 
             List<Unit> units = userManagementService.getAllUnits();
             return ResponseEntity.ok(units);
@@ -172,10 +162,8 @@ public class AdminController {
     @GetMapping("/units/{id}")
     public ResponseEntity<?> getUnitById(@PathVariable Integer id, HttpSession session) {
         try {
-            if (!isAdmin(session)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Access denied. Admin privileges required."));
-            }
+            ResponseEntity<?> adminCheck = validateAdminAccess(session);
+            if (adminCheck != null) return adminCheck;
 
             Unit unit = userManagementService.getUnitById(id);
             return ResponseEntity.ok(unit);
@@ -192,10 +180,8 @@ public class AdminController {
     @PostMapping("/units")
     public ResponseEntity<?> createUnit(@Valid @RequestBody Unit unit, HttpSession session) {
         try {
-            if (!isAdmin(session)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Access denied. Admin privileges required."));
-            }
+            ResponseEntity<?> adminCheck = validateAdminAccess(session);
+            if (adminCheck != null) return adminCheck;
 
             Unit createdUnit = userManagementService.createUnit(unit);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdUnit);
@@ -212,10 +198,8 @@ public class AdminController {
     @PutMapping("/units/{id}")
     public ResponseEntity<?> updateUnit(@PathVariable Integer id, @Valid @RequestBody Unit unit, HttpSession session) {
         try {
-            if (!isAdmin(session)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Access denied. Admin privileges required."));
-            }
+            ResponseEntity<?> adminCheck = validateAdminAccess(session);
+            if (adminCheck != null) return adminCheck;
 
             Unit updatedUnit = userManagementService.updateUnit(id, unit);
             return ResponseEntity.ok(updatedUnit);
@@ -232,10 +216,8 @@ public class AdminController {
     @DeleteMapping("/units/{id}")
     public ResponseEntity<?> deleteUnit(@PathVariable Integer id, HttpSession session) {
         try {
-            if (!isAdmin(session)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Access denied. Admin privileges required."));
-            }
+            ResponseEntity<?> adminCheck = validateAdminAccess(session);
+            if (adminCheck != null) return adminCheck;
 
             userManagementService.deleteUnit(id);
             return ResponseEntity.ok(Map.of("message", "Unit deleted successfully"));
@@ -252,10 +234,8 @@ public class AdminController {
     @GetMapping("/units/search")
     public ResponseEntity<?> searchUnits(@RequestParam String name, HttpSession session) {
         try {
-            if (!isAdmin(session)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Access denied. Admin privileges required."));
-            }
+            ResponseEntity<?> adminCheck = validateAdminAccess(session);
+            if (adminCheck != null) return adminCheck;
 
             List<Unit> units = userManagementService.searchUnitsByName(name);
             return ResponseEntity.ok(units);
@@ -274,10 +254,8 @@ public class AdminController {
     @PostMapping("/staff/bulk")
     public ResponseEntity<?> bulkCreateStaff(@RequestBody BulkStaffRequest request, HttpSession session) {
         try {
-            if (!isAdmin(session)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Access denied. Admin privileges required."));
-            }
+            ResponseEntity<?> adminCheck = validateAdminAccess(session);
+            if (adminCheck != null) return adminCheck;
 
             List<StaffCreationResult> results = new java.util.ArrayList<>();
 
@@ -307,10 +285,8 @@ public class AdminController {
     @GetMapping("/statistics")
     public ResponseEntity<?> getSystemStatistics(HttpSession session) {
         try {
-            if (!isAdmin(session)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Access denied. Admin privileges required."));
-            }
+            ResponseEntity<?> adminCheck = validateAdminAccess(session);
+            if (adminCheck != null) return adminCheck;
 
             // Get basic stats
             UserManagementService.DashboardStats stats = userManagementService.getDashboardStats();
@@ -352,8 +328,15 @@ public class AdminController {
      * Check if current user is admin
      */
     private boolean isAdmin(HttpSession session) {
-        String currentRole = (String) session.getAttribute("staffRole");
-        return currentRole != null && currentRole.toLowerCase().contains("admin");
+        return sessionService.isAdmin(session);
+    }
+
+    private ResponseEntity<?> validateAdminAccess(HttpSession session) {
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "Access denied. Admin privileges required."));
+        }
+        return null;
     }
 
     // ==================== REQUEST/RESPONSE CLASSES ====================

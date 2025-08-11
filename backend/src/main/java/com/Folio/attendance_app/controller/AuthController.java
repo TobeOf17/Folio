@@ -2,6 +2,7 @@ package com.Folio.attendance_app.controller;
 
 import com.Folio.attendance_app.model.Staff;
 import com.Folio.attendance_app.service.AuthService;
+import com.Folio.attendance_app.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,9 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class AuthController {
 
+
+    @Autowired
+    private SessionService sessionService;
     @Autowired
     private AuthService authService;
 
@@ -26,9 +30,7 @@ public class AuthController {
             if (result.isSuccess()) {
                 Staff staff = result.getStaff();
                 // Store user info in session
-                session.setAttribute("staffId", staff.getStaffId());
-                session.setAttribute("staffRole", staff.getRole().getName());
-                session.setAttribute("staffName", staff.getFullName());
+                sessionService.createUserSession(session, staff);
 
                 return ResponseEntity.ok(Map.of(
                         "message", "Login successful",
