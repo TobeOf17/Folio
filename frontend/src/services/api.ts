@@ -1,21 +1,20 @@
-// src/services/api.ts
+// src/services/api.ts (UPDATED - Add admin endpoints)
 import axios from 'axios';
 
-// Configure axios to point to your Spring Boot backend
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = 'http://localhost:8080/api';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
     },
-    withCredentials: true, // Important: This sends cookies/session with requests
+    withCredentials: true,
 });
 
-// Login function
+// Login function (existing)
 export const login = async (identifier: string, password: string) => {
     try {
-        const response = await api.post('/api/auth/login', {
+        const response = await api.post('/auth/login', {
             identifier,
             password
         });
@@ -24,6 +23,29 @@ export const login = async (identifier: string, password: string) => {
         return response.data;
     } catch (error: any) {
         console.error('Login failed:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+// NEW: Admin API calls
+export const getDashboardStats = async () => {
+    try {
+        const response = await api.get('/admin/dashboard');
+        console.log('Dashboard stats:', response.data);
+        return response.data;
+    } catch (error: any) {
+        console.error('Failed to get dashboard stats:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+export const getAllRoles = async () => {
+    try {
+        const response = await api.get('/admin/roles');
+        console.log('Roles:', response.data);
+        return response.data;
+    } catch (error: any) {
+        console.error('Failed to get roles:', error.response?.data || error.message);
         throw error;
     }
 };

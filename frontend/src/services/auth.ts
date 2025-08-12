@@ -1,3 +1,4 @@
+// src/types/auth.ts (UPDATED - Add admin types)
 export interface Staff {
     staffId: string;
     fullName: string;
@@ -17,4 +18,17 @@ export interface AuthContextType {
     login: (staff: Staff) => void;
     logout: () => void;
     isAdmin: () => boolean;
+}
+
+// NEW: Admin types
+export interface DashboardStats {
+    totalUsers: number;
+    totalRoles: number;
+    activeUsers: number;
+}
+
+export interface Role {
+    roleId: number;
+    name: string;
+    description?: string;
 }
