@@ -1,4 +1,3 @@
-// src/App.tsx (UPDATED - Add navigation and routing)
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
@@ -12,10 +11,6 @@ type PageType = 'dashboard' | 'admin';
 const AppContent = () => {
     const { isAuthenticated } = useAuth();
     const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
-
-    const handleNavigate = (page: PageType) => {
-        setCurrentPage(page);
-    };
 
     if (!isAuthenticated) {
         return <LoginPage />;
@@ -36,13 +31,10 @@ const AppContent = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <Navbar currentPage={currentPage} onNavigate={handleNavigate} />
-
-            <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-                <div className="px-4 py-6 sm:px-0">
-                    {renderCurrentPage()}
-                </div>
+        <div className="page-container">
+            <Navbar currentPage={currentPage} onNavigate={setCurrentPage} />
+            <main className="main-content">
+                {renderCurrentPage()}
             </main>
         </div>
     );

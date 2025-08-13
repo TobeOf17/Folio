@@ -1,4 +1,4 @@
-// src/pages/Dashboard.tsx (UPDATED - Remove nav, simplify)
+// src/pages/Dashboard.tsx (CLEAN VERSION)
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 
@@ -6,42 +6,54 @@ const Dashboard = () => {
     const { user, isAdmin } = useAuth();
 
     return (
-        <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-gray-900">Dashboard</h2>
+        <div className="content-wrapper">
+            <div className="text-center">
+                <h2 className="page-title">Welcome Back!</h2>
+                <p className="page-subtitle">Here's your account overview</p>
+            </div>
 
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-                <div className="px-4 py-5 sm:p-6">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-                        User Information
-                    </h3>
+            <div className="card">
+                <h3 className="card-header">Your Information</h3>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Staff ID</label>
-                            <p className="mt-1 text-sm text-gray-900">{user?.staffId}</p>
+                <div className="info-grid">
+                    <div className="info-section">
+                        <div className="form-group">
+                            <label className="label">Staff ID</label>
+                            <p className="info-text">{user?.staffId}</p>
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Full Name</label>
-                            <p className="mt-1 text-sm text-gray-900">{user?.fullName}</p>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Role</label>
-                            <p className="mt-1 text-sm text-gray-900">{user?.role?.name}</p>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Admin Access</label>
-                            <p className="mt-1 text-sm text-gray-900">{isAdmin() ? 'Yes' : 'No'}</p>
+                        <div className="form-group">
+                            <label className="label">Full Name</label>
+                            <p className="info-text">{user?.fullName}</p>
                         </div>
                     </div>
 
-                    {isAdmin() && (
-                        <div className="mt-6 p-4 bg-yellow-100 border border-yellow-400 rounded">
-                            <p className="text-yellow-800">
-                                🔐 You have admin privileges! Use the Admin Panel to manage system settings.
+                    <div className="info-section">
+                        <div className="form-group">
+                            <label className="label">Role</label>
+                            <p className="info-text">{user?.role?.name}</p>
+                        </div>
+                        <div className="form-group">
+                            <label className="label">Admin Access</label>
+                            <p className={`info-text ${isAdmin() ? 'text-purple-700 bg-purple-100' : ''}`}>
+                                {isAdmin() ? 'Yes' : 'No'}
                             </p>
                         </div>
-                    )}
+                    </div>
                 </div>
+
+                {isAdmin() && (
+                    <div className="admin-badge mt-6">
+                        <div className="admin-badge-content">
+                            <div className="admin-badge-icon">🔐</div>
+                            <div>
+                                <h4 className="admin-badge-title">Admin Privileges Detected</h4>
+                                <p className="admin-badge-description">
+                                    You have access to the Admin Panel for system management.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

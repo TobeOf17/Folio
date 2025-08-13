@@ -1,0 +1,295 @@
+@import "tailwindcss";
+
+@layer components {
+    /* === LAYOUT === */
+    .page-container {
+        @apply min-h-screen bg-purple-50;
+    }
+
+    .main-content {
+        @apply max-w-7xl mx-auto py-6 sm:px-6 lg:px-8;
+    }
+
+    .content-wrapper {
+        @apply px-4 py-6 sm:px-0 space-y-6;
+    }
+
+    /* === CARDS === */
+    .card {
+        @apply bg-white rounded-lg shadow-md p-6;
+    }
+
+    .card-header {
+        @apply text-xl font-semibold text-purple-900 mb-6;
+    }
+
+    /* === TYPOGRAPHY === */
+    .page-title {
+        @apply text-3xl font-bold text-purple-900;
+    }
+
+    .page-subtitle {
+        @apply text-purple-600 mt-2;
+    }
+
+    .section-title {
+        @apply text-xl font-semibold text-purple-900 mb-4;
+    }
+
+    .label {
+        @apply block text-sm font-medium text-gray-600 mb-1;
+    }
+
+    .info-text {
+        @apply text-lg text-gray-900 bg-gray-50 px-3 py-2 rounded-md;
+    }
+
+    /* === BUTTONS === */
+    .btn {
+        @apply font-medium py-2 px-4 rounded-md transition duration-200 cursor-pointer;
+    }
+
+    .btn-primary {
+        @apply bg-purple-600 hover:bg-purple-700 text-white;
+    }
+
+    .btn-secondary {
+        @apply bg-white hover:bg-purple-50 text-purple-600 border border-purple-200;
+    }
+
+    .btn-danger {
+        @apply bg-red-500 hover:bg-red-600 text-white;
+    }
+
+    .btn-large {
+        @apply py-3 px-6 text-lg;
+    }
+
+    .btn-small {
+        @apply py-1 px-3 text-sm;
+    }
+
+    .btn-disabled {
+        @apply opacity-50 cursor-not-allowed;
+    }
+
+    /* === FORMS === */
+    .form-input {
+        @apply w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500;
+    }
+
+    .form-group {
+        @apply space-y-1;
+    }
+
+    .form-container {
+        @apply space-y-6;
+    }
+
+    .form-error {
+        @apply bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm;
+    }
+
+    /* === NAVIGATION === */
+    .navbar {
+        @apply bg-white shadow-md border-b border-purple-100;
+    }
+
+    .navbar-container {
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
+
+    .navbar-content {
+        @apply flex justify-between h-16;
+    }
+
+    .nav-brand {
+        @apply text-2xl font-bold text-purple-900;
+    }
+
+    .nav-links {
+        @apply flex space-x-1;
+    }
+
+    .nav-link {
+        @apply px-4 py-2 rounded-md text-sm font-medium transition duration-200;
+    }
+
+    .nav-link-active {
+        @apply bg-purple-600 text-white;
+    }
+
+    .nav-link-inactive {
+        @apply text-purple-600 hover:bg-purple-50;
+    }
+
+    .nav-user-info {
+        @apply text-right;
+    }
+
+    .nav-user-name {
+        @apply text-sm font-medium text-gray-900;
+    }
+
+    .nav-user-role {
+        @apply text-xs text-purple-600;
+    }
+
+    /* === ALERTS & NOTIFICATIONS === */
+    .alert {
+        @apply px-4 py-3 rounded-lg border;
+    }
+
+    .alert-success {
+        @apply bg-green-50 border-green-200 text-green-700;
+    }
+
+    .alert-error {
+        @apply bg-red-50 border-red-200 text-red-700;
+    }
+
+    .alert-warning {
+        @apply bg-yellow-50 border-yellow-200 text-yellow-700;
+    }
+
+    .alert-info {
+        @apply bg-purple-50 border-purple-200 text-purple-700;
+    }
+
+    /* === ADMIN FEATURES === */
+    .admin-badge {
+        @apply bg-purple-50 border border-purple-200 rounded-lg p-4;
+    }
+
+    .admin-badge-content {
+        @apply flex items-center;
+    }
+
+    .admin-badge-icon {
+        @apply text-2xl mr-3;
+    }
+
+    .admin-badge-title {
+        @apply font-medium text-purple-900;
+    }
+
+    .admin-badge-description {
+        @apply text-purple-700 text-sm;
+    }
+
+    .stats-grid {
+        @apply grid grid-cols-1 md:grid-cols-3 gap-4;
+    }
+
+    .stat-card {
+        @apply p-4 rounded-lg;
+    }
+
+    .stat-card-blue {
+        @apply bg-blue-50;
+    }
+
+    .stat-card-green {
+        @apply bg-green-50;
+    }
+
+    .stat-card-purple {
+        @apply bg-purple-50;
+    }
+
+    .stat-number {
+        @apply text-2xl font-bold;
+    }
+
+    .stat-number-blue {
+        @apply text-blue-600;
+    }
+
+    .stat-number-green {
+        @apply text-green-600;
+    }
+
+    .stat-number-purple {
+        @apply text-purple-600;
+    }
+
+    .stat-label {
+        @apply text-sm;
+    }
+
+    .stat-label-blue {
+        @apply text-blue-800;
+    }
+
+    .stat-label-green {
+        @apply text-green-800;
+    }
+
+    .stat-label-purple {
+        @apply text-purple-800;
+    }
+
+    /* === LOADING STATES === */
+    .loading-container {
+        @apply flex items-center justify-center h-64;
+    }
+
+    .loading-text {
+        @apply text-lg text-gray-600;
+    }
+
+    /* === ACCESS DENIED === */
+    .access-denied {
+        @apply min-h-screen flex items-center justify-center bg-gray-50;
+    }
+
+    .access-denied-content {
+        @apply text-center;
+    }
+
+    .access-denied-title {
+        @apply text-2xl font-bold text-gray-900;
+    }
+
+    .access-denied-title-error {
+        @apply text-2xl font-bold text-red-600;
+    }
+
+    .access-denied-message {
+        @apply text-gray-600 mt-2;
+    }
+
+    /* === LOGIN PAGE === */
+    .login-container {
+        @apply min-h-screen flex items-center justify-center bg-purple-50;
+    }
+
+    .login-card {
+        @apply max-w-md w-full space-y-8;
+    }
+
+    .login-header {
+        @apply text-center;
+    }
+
+    .login-title {
+        @apply text-4xl font-bold text-purple-900 mb-2;
+    }
+
+    .login-subtitle {
+        @apply text-purple-600;
+    }
+
+    .login-form-card {
+        @apply bg-white rounded-lg shadow-md p-8;
+    }
+
+    /* === RESPONSIVE GRID === */
+    .info-grid {
+        @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+    }
+
+    .info-section {
+        @apply space-y-4;
+    }
+}

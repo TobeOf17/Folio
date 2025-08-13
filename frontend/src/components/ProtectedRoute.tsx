@@ -1,4 +1,3 @@
-// src/components/ProtectedRoute.tsx
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 
@@ -15,10 +14,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
     if (!isAuthenticated) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold text-gray-900">Access Denied</h2>
-                    <p className="text-gray-600">Please log in to access this page.</p>
+            <div className="access-denied">
+                <div className="access-denied-content">
+                    <h2 className="access-denied-title">Access Denied</h2>
+                    <p className="access-denied-message">Please log in to access this page.</p>
                 </div>
             </div>
         );
@@ -26,10 +25,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
     if (requireAdmin && !isAdmin()) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold text-red-600">Admin Access Required</h2>
-                    <p className="text-gray-600">You don't have permission to access this page.</p>
+            <div className="access-denied">
+                <div className="access-denied-content">
+                    <h2 className="access-denied-title-error">Admin Access Required</h2>
+                    <p className="access-denied-message">You don't have permission to access this page.</p>
                 </div>
             </div>
         );
