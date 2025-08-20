@@ -1,7 +1,49 @@
 // src/components/dashboard/AdminDashboard.tsx
-import React from 'react';
+import React, { useState } from 'react';
+
+interface StaffMember {
+    id: number;
+    name: string;
+    department: string;
+    status: 'present' | 'absent' | 'late' | 'on-leave';
+    checkInTime?: string;
+}
+
+interface DepartmentStats {
+    name: string;
+    totalStaff: number;
+    presentToday: number;
+}
 
 const AdminDashboard = () => {
+    // Mock data - in real app, this would come from API
+    const [stats] = useState({
+        totalStaff: 45,
+        presentToday: 38,
+        onLeave: 7,
+        lateToday: 3
+    });
+
+    const [recentActivity] = useState([
+        { id: 1, name: 'John Doe', action: 'checked in at 8:30 AM', timeAgo: '2 minutes ago', type: 'checkin' },
+        { id: 2, name: 'Jane Smith', action: 'requested shift change', timeAgo: '15 minutes ago', type: 'request' },
+        { id: 3, name: 'Mike Johnson', action: 'submitted leave request', timeAgo: '1 hour ago', type: 'leave' }
+    ]);
+
+    const [departments] = useState<DepartmentStats[]>([
+        { name: 'IT Department', totalStaff: 5, presentToday: 4 },
+        { name: 'HR Department', totalStaff: 8, presentToday: 7 },
+        { name: 'Finance', totalStaff: 6, presentToday: 6 },
+        { name: 'Operations', totalStaff: 12, presentToday: 10 },
+        { name: 'Marketing', totalStaff: 8, presentToday: 7 },
+        { name: 'Sales', totalStaff: 6, presentToday: 4 }
+    ]);
+
+    const handleAction = (action: string) => {
+        console.log(`Admin action: ${action}`);
+        // In real app, this would trigger navigation or modal
+    };
+
     return (
         <div className="space-y-6">
             {/* Admin Badge */}
@@ -26,19 +68,19 @@ const AdminDashboard = () => {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="stat-card stat-card-blue hover-lift">
-                        <div className="stat-number stat-number-blue">45</div>
+                        <div className="stat-number stat-number-blue">{stats.totalStaff}</div>
                         <div className="stat-label stat-label-blue">Total Staff</div>
                     </div>
                     <div className="stat-card stat-card-green hover-lift">
-                        <div className="stat-number stat-number-green">38</div>
+                        <div className="stat-number stat-number-green">{stats.presentToday}</div>
                         <div className="stat-label stat-label-green">Present Today</div>
                     </div>
                     <div className="stat-card stat-card-purple hover-lift">
-                        <div className="stat-number stat-number-purple">7</div>
+                        <div className="stat-number stat-number-purple">{stats.onLeave}</div>
                         <div className="stat-label stat-label-purple">On Leave</div>
                     </div>
                     <div className="stat-card bg-orange-50 hover-lift">
-                        <div className="stat-number text-orange-600">3</div>
+                        <div className="stat-number text-orange-600">{stats.lateToday}</div>
                         <div className="stat-label text-orange-800">Late Today</div>
                     </div>
                 </div>
@@ -47,36 +89,60 @@ const AdminDashboard = () => {
             {/* Admin Actions */}
             <div className="info-grid">
                 <div className="card hover-lift">
-                    <h4 className="card-header">Staff Management</h4>
+                    <h4 className="card-header">👥 Staff Management</h4>
                     <div className="space-y-3">
-                        <button className="btn btn-primary w-full">
+                        <button
+                            onClick={() => handleAction('manage-staff')}
+                            className="btn btn-primary w-full"
+                        >
                             👥 Manage Staff
                         </button>
-                        <button className="btn btn-secondary w-full">
+                        <button
+                            onClick={() => handleAction('attendance-reports')}
+                            className="btn btn-secondary w-full"
+                        >
                             📊 Attendance Reports
                         </button>
-                        <button className="btn btn-secondary w-full">
+                        <button
+                            onClick={() => handleAction('leave-requests')}
+                            className="btn btn-secondary w-full"
+                        >
                             🏥 Leave Requests
                         </button>
-                        <button className="btn btn-secondary w-full">
+                        <button
+                            onClick={() => handleAction('add-staff')}
+                            className="btn btn-secondary w-full"
+                        >
                             ➕ Add New Staff
                         </button>
                     </div>
                 </div>
 
                 <div className="card hover-lift">
-                    <h4 className="card-header">System Administration</h4>
+                    <h4 className="card-header">⚙️ System Administration</h4>
                     <div className="space-y-3">
-                        <button className="btn btn-primary w-full">
+                        <button
+                            onClick={() => handleAction('shift-management')}
+                            className="btn btn-primary w-full"
+                        >
                             🔄 Shift Management
                         </button>
-                        <button className="btn btn-secondary w-full">
-                            📅 Schedule Management
-                        </button>
-                        <button className="btn btn-secondary w-full">
+                        <button
+                            onClick={() => handleAction('analytics')}
+                            className="btn btn-secondary w-full"
+                        >
                             📈 Analytics Dashboard
                         </button>
-                        <button className="btn btn-secondary w-full">
+                        <button
+                            onClick={() => handleAction('schedule-management')}
+                            className="btn btn-secondary w-full"
+                        >
+                            📅 Schedule Management
+                        </button>
+                        <button
+                            onClick={() => handleAction('settings')}
+                            className="btn btn-secondary w-full"
+                        >
                             ⚙️ System Settings
                         </button>
                     </div>
@@ -89,24 +155,34 @@ const AdminDashboard = () => {
                     🕐 Recent Activity
                 </h4>
                 <div className="space-y-3">
-                    <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-                        <div className="text-sm text-green-800">
-                            <strong>John Doe</strong> checked in at 8:30 AM
-                        </div>
-                        <div className="text-xs text-green-600">2 minutes ago</div>
-                    </div>
-                    <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                        <div className="text-sm text-blue-800">
-                            <strong>Jane Smith</strong> requested shift change
-                        </div>
-                        <div className="text-xs text-blue-600">15 minutes ago</div>
-                    </div>
-                    <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                        <div className="text-sm text-yellow-800">
-                            <strong>Mike Johnson</strong> submitted leave request
-                        </div>
-                        <div className="text-xs text-yellow-600">1 hour ago</div>
-                    </div>
+                    {recentActivity.map((activity) => {
+                        const colorClass = activity.type === 'checkin'
+                            ? 'bg-green-50 border-green-200'
+                            : activity.type === 'request'
+                                ? 'bg-blue-50 border-blue-200'
+                                : 'bg-yellow-50 border-yellow-200';
+
+                        const textClass = activity.type === 'checkin'
+                            ? 'text-green-800'
+                            : activity.type === 'request'
+                                ? 'text-blue-800'
+                                : 'text-yellow-800';
+
+                        const timeClass = activity.type === 'checkin'
+                            ? 'text-green-600'
+                            : activity.type === 'request'
+                                ? 'text-blue-600'
+                                : 'text-yellow-600';
+
+                        return (
+                            <div key={activity.id} className={`p-3 rounded-lg border ${colorClass}`}>
+                                <div className={`text-sm ${textClass}`}>
+                                    <strong>{activity.name}</strong> {activity.action}
+                                </div>
+                                <div className={`text-xs ${timeClass}`}>{activity.timeAgo}</div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
 
@@ -116,40 +192,61 @@ const AdminDashboard = () => {
                     🏢 Department Overview
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div className="p-4 bg-blue-50 rounded-xl border border-blue-200">
-                        <div className="font-semibold text-blue-900">IT Department</div>
-                        <div className="text-blue-700">5 Staff Members</div>
-                        <div className="text-sm text-blue-600">4 Present Today</div>
-                    </div>
-                    <div className="p-4 bg-green-50 rounded-xl border border-green-200">
-                        <div className="font-semibold text-green-900">HR Department</div>
-                        <div className="text-green-700">8 Staff Members</div>
-                        <div className="text-sm text-green-600">7 Present Today</div>
-                    </div>
-                    <div className="p-4 bg-purple-50 rounded-xl border border-purple-200">
-                        <div className="font-semibold text-purple-900">Finance</div>
-                        <div className="text-purple-700">6 Staff Members</div>
-                        <div className="text-sm text-purple-600">6 Present Today</div>
-                    </div>
+                    {departments.map((dept, index) => {
+                        const colors = ['blue', 'green', 'purple', 'orange', 'pink', 'indigo'];
+                        const color = colors[index % colors.length];
+
+                        return (
+                            <div key={index} className={`p-4 bg-${color}-50 rounded-xl border border-${color}-200`}>
+                                <div className={`font-semibold text-${color}-900`}>{dept.name}</div>
+                                <div className={`text-${color}-700`}>{dept.totalStaff} Staff Members</div>
+                                <div className={`text-sm text-${color}-600`}>{dept.presentToday} Present Today</div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
 
             {/* Quick Reports */}
             <div className="card hover-lift">
                 <h4 className="card-header flex items-center">
-                    📋 Quick Reports
+                    📋 Quick Actions
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button className="btn btn-secondary p-4 h-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <button
+                        onClick={() => handleAction('daily-report')}
+                        className="btn btn-secondary p-4 h-auto"
+                    >
                         <div className="text-left">
-                            <div className="font-semibold">Daily Attendance Report</div>
+                            <div className="font-semibold">📊 Daily Report</div>
                             <div className="text-sm text-gray-600">Today's attendance summary</div>
                         </div>
                     </button>
-                    <button className="btn btn-secondary p-4 h-auto">
+                    <button
+                        onClick={() => handleAction('weekly-overtime')}
+                        className="btn btn-secondary p-4 h-auto"
+                    >
                         <div className="text-left">
-                            <div className="font-semibold">Weekly Overtime Report</div>
+                            <div className="font-semibold">⏰ Overtime Report</div>
                             <div className="text-sm text-gray-600">Staff overtime tracking</div>
+                        </div>
+                    </button>
+                    <button
+                        onClick={() => handleAction('backup-data')}
+                        className="btn btn-secondary p-4 h-auto"
+                    >
+                        <div className="text-left">
+                            <div className="font-semibold">💾 Backup Data</div>
+                            <div className="text-sm text-gray-600">Create system backup</div>
+                        </div>
+                    </button>
+                    <button
+                        onClick={() => handleAction('send-notification')}
+                        className="btn btn-secondary p-4 h-auto"
+                    >
+                        <div className="text-left">
+                            <div className="font-semibold">🔔 Send Alert</div>
+                            <div className="text-sm text-gray-600">Notify all staff</div>
                         </div>
                     </button>
                 </div>
