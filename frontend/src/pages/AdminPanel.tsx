@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { getDashboardStats, getAllRoles } from '../services/api';
-import { DashboardStats, Role } from '../types/auth';
+import { getSystemStats, getAllRoles } from '../services/api';
+import { SystemStats, Role } from '../types';
 
 const AdminPanel = () => {
-    const [stats, setStats] = useState<DashboardStats | null>(null);
+    const [stats, setStats] = useState<SystemStats | null>(null);
     const [roles, setRoles] = useState<Role[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -17,7 +17,7 @@ const AdminPanel = () => {
         setError(null);
 
         try {
-            const statsData = await getDashboardStats();
+            const statsData = await getSystemStats();
             setStats(statsData);
 
             const rolesData = await getAllRoles();
@@ -59,16 +59,16 @@ const AdminPanel = () => {
                     <h3 className="section-title">System Statistics</h3>
                     <div className="stats-grid">
                         <div className="stat-card-blue">
-                            <div className="stat-number-blue">{stats.totalUsers}</div>
-                            <div className="stat-label-blue">Total Users</div>
+                            <div className="stat-number-blue">{stats.totalStaff}</div>
+                            <div className="stat-label-blue">Total Staff</div>
                         </div>
                         <div className="stat-card-green">
-                            <div className="stat-number-green">{stats.activeUsers}</div>
-                            <div className="stat-label-green">Active Users</div>
+                            <div className="stat-number-green">{stats.presentToday}</div>
+                            <div className="stat-label-green">Present Today</div>
                         </div>
-                        <div className="stat-card-purple">
-                            <div className="stat-number-purple">{stats.totalRoles}</div>
-                            <div className="stat-label-purple">Total Roles</div>
+                        <div className="stat-card-red">
+                            <div className="stat-number-red">{stats.pendingRequests}</div>
+                            <div className="stat-label-red">Pending Requests</div>
                         </div>
                     </div>
                 </div>

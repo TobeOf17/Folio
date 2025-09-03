@@ -1,6 +1,7 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Staff, AuthContextType } from '../types/auth';
+import { Staff } from '../types';
+import { AuthContextType } from '../services/auth';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

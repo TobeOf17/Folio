@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import AdminPanel from './pages/AdminPanel';
-import Navbar from './components/Navbar';
+import AttendanceHistory from './pages/AttendanceHistory';
+import StaffManagement from './pages/StaffManagement';
 import ProtectedRoute from './components/ProtectedRoute';
 
-type PageType = 'dashboard' | 'admin';
+type PageType = 'landing' | 'login' | 'dashboard' | 'admin' | 'attendance-history' | 'staff-management';
 
 const AppContent = () => {
     const { isAuthenticated } = useAuth();
-    const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
+    const [currentPage, setCurrentPage] = useState<PageType>('landing');
 
+    // If not authenticated, show landing or login page based on current page
     if (!isAuthenticated) {
-        return <LoginPage />;
+        if (currentPage === 'login') {
+            return <LoginPage onBackToLanding={() => setCurrentPage('landing')} />;
+        }
+        return <LandingPage onNavigateToLogin={() => setCurrentPage('login')} />;
     }
 
     const renderCurrentPage = () => {
@@ -24,6 +30,14 @@ const AppContent = () => {
                         <AdminPanel />
                     </ProtectedRoute>
                 );
+            case 'staff-management':
+                return (
+                    <ProtectedRoute requireAdmin={true}>
+                        <StaffManagement />
+                    </ProtectedRoute>
+                );
+            case 'attendance-history':
+                return <AttendanceHistory />;
             case 'dashboard':
             default:
                 return <Dashboard />;
@@ -32,9 +46,14 @@ const AppContent = () => {
 
     return (
         <div className="page-container">
-            <Navbar currentPage={currentPage} onNavigate={setCurrentPage} />
-            <main className="main-content">
-                {renderCurrentPage()}
+            <CalendlyNavbar 
+                currentPage={currentPage}
+                onNavigate={setCurrentPage}
+            />
+            <main style={{ paddingTop: '64px' }}>
+                <div className="main-container">
+                    {renderCurrentPage()}
+                </div>
             </main>
         </div>
     );

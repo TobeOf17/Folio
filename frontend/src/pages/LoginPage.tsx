@@ -1,13 +1,18 @@
-// src/pages/LoginPage.tsx (MODERN VERSION)
+// src/pages/LoginPage.tsx
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { login as loginAPI } from '../services/api';
 
-const LoginPage = () => {
+interface LoginPageProps {
+    onBackToLanding?: () => void;
+}
+
+const LoginPage = ({ onBackToLanding }: LoginPageProps) => {
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [showPassword, setShowPassword] = useState(false);
     const { login } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -16,7 +21,7 @@ const LoginPage = () => {
         setIsLoading(true);
 
         try {
-            const result = await loginAPI(identifier, password);
+            const result = await loginAPI({ identifier, password });
             login(result.staff);
         } catch (error: any) {
             if (error.response?.status === 401) {
@@ -32,77 +37,161 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="login-container">
-            <div className="login-card">
-                <div className="login-header">
-                    <h2 className="login-title">Welcome Back</h2>
-                    <p className="login-subtitle">Sign in to your account</p>
-                </div>
+        <div className="modern-login">
+            {/* Background decoration */}
+            <div className="login-background">
+                <div className="bg-pattern"></div>
+            </div>
 
-                <div className="login-form-card hover-lift">
-                    <form className="form-container" onSubmit={handleSubmit}>
-                        {error && (
-                            <div className="form-error">
-                                <div className="flex items-center">
-                                    <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                    </svg>
-                                    {error}
+            {/* Header with back navigation */}
+            {onBackToLanding && (
+                <header className="login-header">
+                    <button onClick={onBackToLanding} className="back-button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        <span>Back to Home</span>
+                    </button>
+                </header>
+            )}
+
+            {/* Main login content */}
+            <main className="login-main">
+                <div className="login-container">
+                    {/* Brand section */}
+                    <div className="login-brand-section">
+                        <div className="brand-logo-large">
+                            <span className="logo-icon">F</span>
+                        </div>
+                        <h1 className="login-main-title">Welcome back to Folio</h1>
+                        <p className="login-subtitle">
+                            Sign in to access your workforce management dashboard
+                        </p>
+                    </div>
+
+                    {/* Login form */}
+                    <div className="login-form-container">
+                        <form className="login-form" onSubmit={handleSubmit}>
+                            {/* Error message */}
+                            {error && (
+                                <div className="error-alert">
+                                    <div className="error-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                                            <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" strokeWidth="2"/>
+                                            <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" strokeWidth="2"/>
+                                        </svg>
+                                    </div>
+                                    <span>{error}</span>
+                                </div>
+                            )}
+
+                            {/* Username/Email field */}
+                            <div className="form-field">
+                                <label className="field-label" htmlFor="identifier">
+                                    Username or Email
+                                </label>
+                                <div className="input-wrapper">
+                                    <input
+                                        id="identifier"
+                                        type="text"
+                                        required
+                                        className="form-input"
+                                        placeholder="Enter your username or email"
+                                        value={identifier}
+                                        onChange={(e) => setIdentifier(e.target.value)}
+                                    />
                                 </div>
                             </div>
-                        )}
 
-                        <div className="info-section">
-                            <div className="form-group">
-                                <label className="label">Username or Email</label>
-                                <input
-                                    type="text"
-                                    required
-                                    className="form-input"
-                                    placeholder="Enter your username or email"
-                                    value={identifier}
-                                    onChange={(e) => setIdentifier(e.target.value)}
-                                />
+                            {/* Password field */}
+                            <div className="form-field">
+                                <label className="field-label" htmlFor="password">
+                                    Password
+                                </label>
+                                <div className="input-wrapper password-wrapper">
+                                    <input
+                                        id="password"
+                                        type={showPassword ? "text" : "password"}
+                                        required
+                                        className="form-input"
+                                        placeholder="Enter your password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="password-toggle"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                    >
+                                        {showPassword ? (
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                                <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                <line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
+                                        ) : (
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" strokeWidth="2"/>
+                                                <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
+                                            </svg>
+                                        )}
+                                    </button>
+                                </div>
                             </div>
 
-                            <div className="form-group">
-                                <label className="label">Password</label>
-                                <input
-                                    type="password"
-                                    required
-                                    className="form-input"
-                                    placeholder="Enter your password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
+                            {/* Remember me and forgot password */}
+                            <div className="form-options">
+                                <label className="checkbox-label">
+                                    <input type="checkbox" className="checkbox-input" />
+                                    <span className="checkbox-text">Remember me</span>
+                                </label>
+                                <a href="#" className="forgot-link">
+                                    Forgot password?
+                                </a>
                             </div>
-                        </div>
 
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className={`btn btn-primary btn-large w-full ${isLoading ? 'btn-disabled' : ''}`}
-                        >
-                            <div className="flex items-center justify-center">
-                                {isLoading && (
-                                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
+                            {/* Submit button */}
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className={`submit-button ${isLoading ? 'loading' : ''}`}
+                            >
+                                {isLoading ? (
+                                    <div className="loading-content">
+                                        <svg className="loading-spinner" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" strokeDasharray="32" strokeDashoffset="32">
+                                                <animateTransform
+                                                    attributeName="transform"
+                                                    type="rotate"
+                                                    values="0 12 12;360 12 12"
+                                                    dur="1s"
+                                                    repeatCount="indefinite"/>
+                                                <animate
+                                                    attributeName="stroke-dashoffset"
+                                                    values="32;0;32"
+                                                    dur="1s"
+                                                    repeatCount="indefinite"/>
+                                            </circle>
+                                        </svg>
+                                        <span>Signing in...</span>
+                                    </div>
+                                ) : (
+                                    <span>Sign In</span>
                                 )}
-                                {isLoading ? 'Signing in...' : 'Sign In'}
-                            </div>
-                        </button>
-                    </form>
+                            </button>
+                        </form>
 
-                    {/* Optional: Add a forgot password link */}
-                    <div className="text-center mt-6">
-                        <a href="#" className="text-sm text-purple-600 hover:text-purple-800 transition-colors duration-200">
-                            Forgot your password?
-                        </a>
+                        {/* Additional help */}
+                        <div className="login-help">
+                            <p className="help-text">
+                                Need help signing in?
+                                <a href="#" className="help-link">Contact support</a>
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     );
 };
