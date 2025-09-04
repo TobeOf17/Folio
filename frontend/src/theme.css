@@ -1,0 +1,8 @@
+/* Main theme.css - Import all component styles */
+@import "tailwindcss";
+/* Base styles and variables */
+@import './styles/base-variables.css';
+@import './styles/dashboard-navbar.css';
+@import './styles/landing.css';
+@import 'styles/login.css';
+@import './styles/responsive-mobile.css';

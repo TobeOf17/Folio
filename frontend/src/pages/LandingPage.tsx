@@ -1,267 +1,270 @@
-// src/pages/LandingPage.tsx
-import React, { useState } from 'react';
+import React from "react";
+import Navbar from "../components/Navbar.tsx";
+import FeatureCard from "../components/FeatureCard";
+import {
+    CalendarLinkIcon,
+    RulesIcon,
+    TeamIcon,
+    WorkflowIcon,
+    EmbedIcon,
+    TimeZoneIcon,
+} from "../components/icons/ProductIcons";
 
-interface LandingPageProps {
-    onNavigateToLogin: () => void;
-}
 
-const LandingPage = ({ onNavigateToLogin }: LandingPageProps) => {
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+const LandingPage: React.FC = () => {
     return (
-        <div className="modern-landing">
-            {/* Navigation Header */}
-            <header className="landing-header">
-                <nav className="landing-nav">
-                    <div className="nav-container">
-                        {/* Logo Section */}
-                        <div className="nav-brand">
-                            <div className="brand-logo">
-                                <span className="logo-icon">F</span>
-                            </div>
-                            <span className="brand-text">Folio</span>
-                        </div>
+        <div className="folio-page">
+            {/* NAVBAR */}
+            <Navbar variant="landing" />
 
-                        {/* Desktop Navigation Links */}
-                        <div className="nav-links">
-                            <a href="#features" className="nav-link">Features</a>
-                            <a href="#solutions" className="nav-link">Solutions</a>
-                            <a href="#resources" className="nav-link">Resources</a>
-                            <a href="#pricing" className="nav-link">Pricing</a>
-                        </div>
-
-                        {/* Desktop Actions */}
-                        <div className="nav-actions">
-                            <button onClick={onNavigateToLogin} className="signin-button">
-                                Sign In
-                            </button>
-                            <button onClick={onNavigateToLogin} className="primary-cta-button">
-                                Get Started
-                            </button>
-                        </div>
-
-                        {/* Mobile Menu Toggle */}
-                        <button
-                            className="mobile-menu-button"
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            aria-label="Toggle navigation menu"
-                        >
-                            <div className={`hamburger ${isMobileMenuOpen ? 'active' : ''}`}>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </button>
-                    </div>
-
-                    {/* Mobile Menu Overlay */}
-                    {isMobileMenuOpen && (
-                        <div className="mobile-menu">
-                            <div className="mobile-menu-content">
-                                <div className="mobile-nav-links">
-                                    <a href="#features" className="mobile-nav-link">Features</a>
-                                    <a href="#solutions" className="mobile-nav-link">Solutions</a>
-                                    <a href="#resources" className="mobile-nav-link">Resources</a>
-                                    <a href="#pricing" className="mobile-nav-link">Pricing</a>
-                                </div>
-                                <div className="mobile-nav-actions">
-                                    <button onClick={onNavigateToLogin} className="mobile-signin-button">
-                                        Sign In
-                                    </button>
-                                    <button onClick={onNavigateToLogin} className="mobile-cta-button">
-                                        Get Started
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </nav>
-            </header>
-
-            {/* Hero Section */}
-            <section className="hero-section">
-                <div className="hero-container">
-                    <div className="hero-content">
+            {/* HERO */}
+            <section className="hero">
+                <div className="container grid-12 center-y">
+                    <div className="col-12 md-col-7">
                         <h1 className="hero-title">
-                            Easy scheduling that
-                            <span className="title-highlight"> works for everyone</span>
+                            Easy scheduling <span className="accent">ahead</span>
                         </h1>
-                        <p className="hero-description">
-                            Streamline your workforce management with intelligent shift scheduling,
-                            real-time attendance tracking, and seamless team coordination.
-                            Built for modern teams who value efficiency.
+                        <p className="hero-sub">
+                            Share availability once, let people choose a time, and skip the back-and-forth.
                         </p>
-                        <div className="hero-actions">
-                            <button onClick={onNavigateToLogin} className="hero-primary-button">
-                                <span>Start for free</span>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                    <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
-                            </button>
-                            <button className="hero-secondary-button">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                    <polygon points="5,3 19,12 5,21" stroke="currentColor" strokeWidth="2" fill="currentColor"/>
-                                </svg>
-                                <span>Watch demo</span>
-                            </button>
-                        </div>
 
-                        {/* Trust Indicators */}
-                        <div className="trust-indicators">
-                            <p className="trust-text">Trusted by 100,000+ teams worldwide</p>
-                            <div className="trust-stats">
-                                <div className="stat-item">
-                                    <span className="stat-number">99.9%</span>
-                                    <span className="stat-label">Uptime</span>
-                                </div>
-                                <div className="stat-item">
-                                    <span className="stat-number">10M+</span>
-                                    <span className="stat-label">Shifts managed</span>
+                        <div className="hero-form grid-12">
+                            <input type="email" className="input col-12 md-col-7" placeholder="Enter your email" />
+                            <button className="btn btn-primary col-12 md-col-5">Create your free account</button>
+                            <p className="form-note col-12">No credit card required.</p>
+                        </div>
+                    </div>
+
+                    {/* Replaced the preview card with a testimonial + metrics panel */}
+                    <div className="col-12 md-col-5">
+                        <div className="card card-showcase">
+                            <div className="quote">
+                                <div className="stars" aria-label="5 stars">★★★★★</div>
+                                <p>
+                                    "Folio cut our scheduling time by <b>70%</b>. Clients book in seconds and our no-shows dropped."
+                                </p>
+                                <div className="person">
+                                    <div className="avatar" />
+                                    <div>
+                                        <div className="name">Tola A.</div>
+                                        <div className="role">Operations Lead, BrightLabs</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
-            {/* Features Section */}
-            <section className="features-section" id="features">
-                <div className="features-container">
-                    <div className="section-header">
-                        <h2 className="section-title">Everything you need to manage your workforce</h2>
-                        <p className="section-description">
-                            Powerful features designed to simplify scheduling and boost productivity
-                        </p>
-                    </div>
-
-                    <div className="features-grid">
-                        <div className="feature-card">
-                            <div className="feature-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                    <path d="M8 2v4M16 2v4M3 10h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                                    <path d="M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" stroke="currentColor" strokeWidth="2"/>
-                                </svg>
-                            </div>
-                            <div className="feature-content">
-                                <h3 className="feature-title">Smart Scheduling</h3>
-                                <p className="feature-description">
-                                    Create, modify, and optimize shifts with AI-powered scheduling that considers
-                                    availability, skills, and business requirements.
-                                </p>
-                                <a href="#" className="feature-link">
-                                    Learn more
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div className="feature-card">
-                            <div className="feature-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                                    <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                                </svg>
-                            </div>
-                            <div className="feature-content">
-                                <h3 className="feature-title">Real-time Tracking</h3>
-                                <p className="feature-description">
-                                    Monitor attendance in real-time with automated clock-ins, GPS verification,
-                                    and detailed reporting capabilities.
-                                </p>
-                                <a href="#" className="feature-link">
-                                    Learn more
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div className="feature-card">
-                            <div className="feature-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                                    <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
-                                </svg>
-                            </div>
-                            <div className="feature-content">
-                                <h3 className="feature-title">Team Collaboration</h3>
-                                <p className="feature-description">
-                                    Enable seamless shift swaps, time-off requests, and team communication
-                                    with built-in approval workflows.
-                                </p>
-                                <a href="#" className="feature-link">
-                                    Learn more
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div className="feature-card">
-                            <div className="feature-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                    <path d="M3 3v5h5M3 16l4-4 4 4 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                                    <path d="M21 21v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                                </svg>
-                            </div>
-                            <div className="feature-content">
-                                <h3 className="feature-title">Analytics & Reports</h3>
-                                <p className="feature-description">
-                                    Get insights into workforce productivity, attendance patterns, and
-                                    operational efficiency with comprehensive analytics.
-                                </p>
-                                <a href="#" className="feature-link">
-                                    Learn more
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                                    </svg>
-                                </a>
+                            <div className="metrics">
+                                <div className="metric">
+                                    <div className="kpi">70%</div>
+                                    <div className="label">Less back-and-forth</div>
+                                </div>
+                                <div className="metric">
+                                    <div className="kpi">4 min</div>
+                                    <div className="label">Avg. time to book</div>
+                                </div>
+                                <div className="metric">
+                                    <div className="kpi">−38%</div>
+                                    <div className="label">No-shows</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="cta-section">
-                <div className="cta-container">
-                    <div className="cta-content">
-                        <h2 className="cta-title">Ready to transform your workforce management?</h2>
-                        <p className="cta-description">
-                            Join thousands of teams already using Folio to streamline their operations
-                        </p>
-                        <div className="cta-actions">
-                            <button onClick={onNavigateToLogin} className="cta-primary-button">
-                                Start free trial
-                            </button>
-                            <button className="cta-secondary-button">
-                                Schedule demo
-                            </button>
+            {/* Updated brand carousel with SVG images */}
+            <section className="marquee">
+                <div className="container">
+                    <div className="marquee-track">
+                        {/* First set of brand images */}
+                        {Array.from({ length: 13 }, (_, i) => (
+                            <img
+                                key={`set1-${i}`}
+                                src={`/public/images/brand/brand-${String(i + 1).padStart(2, '0')}.svg`}
+                                alt={`Brand ${i + 1}`}
+                                className="brand-logo"
+                            />
+                        ))}
+                        {/* Second set for seamless loop */}
+                        {Array.from({ length: 13 }, (_, i) => (
+                            <img
+                                key={`set2-${i}`}
+                                src={`/public/images/brand/brand-${String(i + 1).padStart(2, '0')}.svg`}
+                                alt={`Brand ${i + 1}`}
+                                className="brand-logo"
+                            />
+                        ))}
+                        {/* Third set for extra seamless transition */}
+                        {Array.from({ length: 13 }, (_, i) => (
+                            <img
+                                key={`set3-${i}`}
+                                src={`/public/images/brand/brand-${String(i + 1).padStart(2, '0')}.svg`}
+                                alt={`Brand ${i + 1}`}
+                                className="brand-logo"
+                            />
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            <section id="features" className="section">
+                <div className="container">
+                    <div className="section-head">
+                        <span className="eyebrow">Features</span>
+                        <h2 className="section-title">Everything you need to book faster</h2>
+                        <p className="section-sub">Powerful scheduling that adapts to your workflow.</p>
+                    </div>
+
+                    <div className="grid-12 gap">
+                        <div className="col-12 sm-col-6 lg-col-4">
+                            <FeatureCard
+                                icon={<CalendarLinkIcon />}
+                                title="Share once, book forever"
+                                text="Send a single link. Your live availability stays in sync."
+                            />
+                        </div>
+
+                        <div className="col-12 sm-col-6 lg-col-4">
+                            <FeatureCard
+                                icon={<RulesIcon />}
+                                title="Control the rules"
+                                text="Buffers, daily limits, minimum notice, and custom durations."
+                            />
+                        </div>
+
+                        <div className="col-12 sm-col-6 lg-col-4">
+                            <FeatureCard
+                                icon={<TeamIcon />}
+                                title="Team scheduling"
+                                text="Round-robin, collective, and one-to-one for teams."
+                            />
+                        </div>
+
+                        <div className="col-12 sm-col-6 lg-col-4">
+                            <FeatureCard
+                                icon={<WorkflowIcon />}
+                                title="Workflows & reminders"
+                                text="Automatic confirmations and reminders reduce no-shows."
+                            />
+                        </div>
+
+                        <div className="col-12 sm-col-6 lg-col-4">
+                            <FeatureCard
+                                icon={<EmbedIcon />}
+                                title="Embeds & integrations"
+                                text="Add Folio to your site and connect favorite tools."
+                            />
+                        </div>
+
+                        <div className="col-12 sm-col-6 lg-col-4">
+                            <FeatureCard
+                                icon={<TimeZoneIcon />}
+                                title="Time-zone smart"
+                                text="Guests always see times in their local time zone."
+                            />
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Footer */}
-            <footer className="modern-footer">
-                <div className="footer-container">
-                    <div className="footer-content">
-                        <div className="footer-brand">
-                            <div className="footer-logo">
-                                <span className="logo-icon">F</span>
-                            </div>
-                            <span className="brand-text">Folio</span>
-                        </div>
-                        <p className="footer-tagline">
-                            Modern workforce management for the modern workplace
-                        </p>
+            {/* HOW IT WORKS */}
+            <section id="how" className="section alt">
+                <div className="container">
+                    <div className="section-head">
+                        <span className="eyebrow">How it works</span>
+                        <h2 className="section-title">Set up in minutes</h2>
                     </div>
-                    <div className="footer-bottom">
-                        <p className="copyright">© 2024 Folio. All rights reserved.</p>
+
+                    <div className="grid-12 gap">
+                        {[
+                            { n: "1", t: "Connect your calendar", d: "Sync Google, Outlook, or iCloud in seconds." },
+                            { n: "2", t: "Set your rules", d: "Choose meeting types, buffers, and working hours." },
+                            { n: "3", t: "Share your link", d: "Guests pick a time. Events land on everyone's calendar." },
+                        ].map((s, i) => (
+                            <div key={i} className="col-12 md-col-4">
+                                <div className="card step-card">
+                                    <div className="step-badge">{s.n}</div>
+                                    <h3 className="card-title">{s.t}</h3>
+                                    <p className="card-text">{s.d}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* PRICING */}
+            <section id="pricing" className="section">
+                <div className="container">
+                    <div className="section-head">
+                        <span className="eyebrow">Pricing</span>
+                        <h2 className="section-title">Start free, upgrade anytime</h2>
+                    </div>
+
+                    <div className="grid-12 gap">
+                        {[
+                            { name: "Basic", price: "Free", features: ["1 event type", "Email notifications", "Embed link"] },
+                            { name: "Pro", price: "$12/mo", features: ["Unlimited event types", "Reminders", "Team scheduling"] },
+                            { name: "Business", price: "$20/mo", features: ["Workflows", "SSO", "Advanced integrations"] },
+                        ].map((p, i) => (
+                            <div key={i} className="col-12 md-col-4">
+                                <div className="card pricing-card soft">
+                                    <h3 className="card-title">{p.name}</h3>
+                                    <div className="price">{p.price}</div>
+                                    <ul className="bullet-list tight">
+                                        {p.features.map((f, j) => <li key={j}>{f}</li>)}
+                                    </ul>
+                                    <button className="btn btn-primary w-full">Choose {p.name}</button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* FAQ */}
+            <section id="faq" className="section alt">
+                <div className="container">
+                    <div className="section-head">
+                        <span className="eyebrow">FAQ</span>
+                        <h2 className="section-title">Answers to common questions</h2>
+                    </div>
+
+                    <div className="grid-12 gap">
+                        {[
+                            { q: "Can I keep using Folio for free?", a: "Yes. The Basic plan is free forever with core scheduling features." },
+                            { q: "Does Folio support teams?", a: "Yes. Round-robin, collective, and group scheduling on paid plans." },
+                            { q: "Will Folio handle time zones?", a: "Absolutely. Guests always see times in their local time zone." },
+                        ].map((item, i) => (
+                            <div key={i} className="col-12 md-col-4">
+                                <div className="card faq-card soft">
+                                    <h3 className="card-title">{item.q}</h3>
+                                    <p className="card-text">{item.a}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* CLEAN, MINIMAL CTA */}
+            <section className="cta">
+                <div className="container grid-12 center-y">
+                    <div className="col-12 md-col-8">
+                        <h2 className="cta-title">Book meetings the easy way with Folio</h2>
+                        <p className="cta-sub">Join thousands of professionals saving hours every week.</p>
+                    </div>
+                    <div className="col-12 md-col-4 right-md">
+                        <button className="btn btn-primary w-full md-w-auto">Get Started Free</button>
+                    </div>
+                </div>
+            </section>
+
+            {/* MINIMAL FOOTER */}
+            <footer className="footer-min">
+                <div className="container grid-12 center-y">
+
+                    <div className="col-12 md-col-6 right-md muted">
+                        © {new Date().getFullYear()} Folio
                     </div>
                 </div>
             </footer>

@@ -1,70 +1,111 @@
-import { useState } from 'react';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import LandingPage from './pages/LandingPage';
-import LoginPage from './pages/LoginPage';
-import Dashboard from './pages/Dashboard';
-import AdminPanel from './pages/AdminPanel';
-import AttendanceHistory from './pages/AttendanceHistory';
-import StaffManagement from './pages/StaffManagement';
-import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-type PageType = 'landing' | 'login' | 'dashboard' | 'admin' | 'attendance-history' | 'staff-management';
+import LandingPage from "./pages/LandingPage";
+import LoginPage from "./pages/LoginPage";
+import Dashboard from "./pages/Dashboard";
+import AdminPanel from "./pages/AdminPanel";
+import AttendanceHistory from "./pages/AttendanceHistory";
+import StaffManagement from "./pages/StaffManagement";
+import Navbar from "./components/Navbar";
 
-const AppContent = () => {
+/** Route guards */
+function RequireAuth({ children }: { children: JSX.Element }) {
     const { isAuthenticated } = useAuth();
-    const [currentPage, setCurrentPage] = useState<PageType>('landing');
+    return isAuthenticated ? children : <Navigate to="/login" replace />;
+}
 
-    // If not authenticated, show landing or login page based on current page
-    if (!isAuthenticated) {
-        if (currentPage === 'login') {
-            return <LoginPage onBackToLanding={() => setCurrentPage('landing')} />;
-        }
-        return <LandingPage onNavigateToLogin={() => setCurrentPage('login')} />;
-    }
+function RequireAdmin({ children }: { children: JSX.Element }) {
+    const { isAuthenticated, user } = useAuth();
+    if (!isAuthenticated) return <Navigate to="/login" replace />;
+    if (!user?.isAdmin) return <Navigate to="/dashboard" replace />;
+    return children;
+}
 
-    const renderCurrentPage = () => {
-        switch (currentPage) {
-            case 'admin':
-                return (
-                    <ProtectedRoute requireAdmin={true}>
-                        <AdminPanel />
-                    </ProtectedRoute>
-                );
-            case 'staff-management':
-                return (
-                    <ProtectedRoute requireAdmin={true}>
-                        <StaffManagement />
-                    </ProtectedRoute>
-                );
-            case 'attendance-history':
-                return <AttendanceHistory />;
-            case 'dashboard':
-            default:
-                return <Dashboard />;
-        }
-    };
-
+function AuthedLayout({ children }: { children: React.ReactNode }) {
     return (
         <div className="page-container">
-            <CalendlyNavbar 
-                currentPage={currentPage}
-                onNavigate={setCurrentPage}
-            />
-            <main style={{ paddingTop: '64px' }}>
-                <div className="main-container">
-                    {renderCurrentPage()}
-                </div>
+            <Navbar variant="dashboard" onToggleSidebar={() => {}} />
+            <main style={{ paddingTop: "64px" }}>
+                <div className="main-container">{children}</div>
             </main>
         </div>
     );
-};
+}
 
-function App() {
+function RouterTree() {
+    const { isAuthenticated } = useAuth();
+
     return (
-        <AuthProvider>
-            <AppContent />
-        </AuthProvider>
+        <Routes>
+            {/* Public */}
+            <Route
+                path="/"
+                element={
+                    isAuthenticated ? <Navigate to="/dashboard" replace /> : <LandingPage />
+                }
+            />
+            <Route
+                path="/login"
+                element={
+                    isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />
+                }
+            />
+
+            {/* Private */}
+            <Route
+                path="/dashboard"
+                element={
+                    <RequireAuth>
+                        <AuthedLayout>
+                            <Dashboard />
+                        </AuthedLayout>
+                    </RequireAuth>
+                }
+            />
+            <Route
+                path="/attendance-history"
+                element={
+                    <RequireAuth>
+                        <AuthedLayout>
+                            <AttendanceHistory />
+                        </AuthedLayout>
+                    </RequireAuth>
+                }
+            />
+            <Route
+                path="/staff-management"
+                element={
+                    <RequireAuth>
+                        <AuthedLayout>
+                            <StaffManagement />
+                        </AuthedLayout>
+                    </RequireAuth>
+                }
+            />
+            <Route
+                path="/admin"
+                element={
+                    <RequireAdmin>
+                        <AuthedLayout>
+                            <AdminPanel />
+                        </AuthedLayout>
+                    </RequireAdmin>
+                }
+            />
+
+            {/* Catch-all */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
     );
 }
 
-export default App;
+export default function App() {
+    return (
+        <AuthProvider>
+            <BrowserRouter>
+                <RouterTree />
+            </BrowserRouter>
+        </AuthProvider>
+    );
+}

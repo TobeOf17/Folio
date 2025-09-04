@@ -1,175 +1,122 @@
-// src/components/Navbar.tsx
-import React, { useState, useRef, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import React, { useEffect, useRef, useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 interface NavbarProps {
-    onToggleSidebar: () => void;
+    onToggleSidebar?: () => void;
+    variant?: 'landing' | 'dashboard';
+
 }
 
-const Navbar = ({ onToggleSidebar }: NavbarProps) => {
+const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, variant = 'dashboard' }) => {
     const { user, logout } = useAuth();
-    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
+    const [open, setOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
 
-    const handleClockIn = () => {
-        // Add your clock in logic here
-        console.log('Clock in clicked');
-    };
-
-    const toggleUserMenu = () => {
-        setIsUserMenuOpen(!isUserMenuOpen);
-    };
-
-    // Close dropdown when clicking outside
+    // close menu on outside click / Esc
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsUserMenuOpen(false);
-            }
+        const onDocClick = (e: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(e.target as Node)) setOpen(false);
         };
-
-        document.addEventListener('mousedown', handleClickOutside);
+        const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+        document.addEventListener("mousedown", onDocClick);
+        document.addEventListener("keydown", onKey);
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener("mousedown", onDocClick);
+            document.removeEventListener("keydown", onKey);
         };
     }, []);
 
+    // scroll shadow
+    useEffect(() => {
+        const el = document.querySelector(".navbar");
+        const onScroll = () => {
+            if (!el) return;
+            (el as HTMLElement).classList.toggle("scrolled", window.scrollY > 20);
+        };
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
+
     return (
-        <nav className="modern-navbar">
-            <div className="navbar-container">
-                {/* Left Section */}
-                <div className="navbar-left">
-                    <button
-                        className="mobile-menu-toggle"
-                        onClick={onToggleSidebar}
-                        aria-label="Toggle sidebar"
-                    >
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                        </svg>
-                    </button>
-
-                    <div className="brand-section">
-                        <div className="brand-logo">
-                            <span className="logo-icon">F</span>
-                        </div>
-                        <span className="brand-name">Folio</span>
-                    </div>
-                </div>
-
-                {/* Right Section */}
-                <div className="navbar-right">
-                    {/* Clock In Button */}
-                    <button
-                        className="clock-in-button"
-                        onClick={handleClockIn}
-                    >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                            <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                        </svg>
-                        <span>Clock In</span>
-                    </button>
-
-                    {/* User Profile Dropdown */}
-                    <div className="user-dropdown-container" ref={dropdownRef}>
+        <nav className="navbar" role="navigation">
+            <div className="nav-container">
+                {/* Left: mobile toggle + brand */}
+                <div className="nav-left">
+                    {variant === 'dashboard' && (
                         <button
-                            className="user-profile-trigger"
-                            onClick={toggleUserMenu}
+                            className="mobile-toggle"
+                            onClick={onToggleSidebar}
+                            aria-label="Toggle sidebar"
                         >
-                            <div className="user-avatar">
-                                {user?.fullName?.charAt(0) || 'U'}
-                            </div>
-                            <div className="user-details">
-                                <div className="user-name">
-                                    {user?.fullName || 'User'}
-                                </div>
-                                <div className="user-role">
-                                    {user?.role?.name || 'Staff'}
-                                </div>
-                            </div>
-                            <svg
-                                width="16"
-                                height="16"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                className={`dropdown-arrow ${isUserMenuOpen ? 'rotated' : ''}`}
-                            >
-                                <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                             </svg>
                         </button>
+                    )}
 
-                        {/* Dropdown Menu */}
-                        {isUserMenuOpen && (
-                            <div className="user-dropdown-menu">
-                                <div className="dropdown-header">
-                                    <div className="dropdown-avatar">
-                                        {user?.fullName?.charAt(0) || 'U'}
-                                    </div>
-                                    <div className="dropdown-user-info">
-                                        <div className="dropdown-name">
-                                            {user?.fullName || 'User'}
-                                        </div>
-                                        <div className="dropdown-email">
-                                            {user?.email || 'user@example.com'}
-                                        </div>
-                                    </div>
-                                </div>
+                    <a href="/" className="brand">
+                        <img src="/images/logo/Logo.png" alt="Folio" className="logo" />
+                    </a>
+                </div>
 
-                                <div className="dropdown-divider"></div>
+                {/* Center: nav links */}
+                <nav className="nav-links">
+                    <a className="nav-link" href="#features">Features</a>
+                    <a className="nav-link" href="#how">How it works</a>
+                    <a className="nav-link" href="#pricing">Pricing</a>
+                    <a className="nav-link" href="#faq">FAQ</a>
+                </nav>
 
-                                <div className="dropdown-items">
-                                    <button className="dropdown-item">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                            <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
-                                        </svg>
-                                        <span>Profile Settings</span>
-                                    </button>
+                {/* Right: actions */}
+                <div className="nav-right">
+                    {variant === 'landing' ? (
+                        <>
+                            <Link className="login-btn" to="/login">Log in</Link>
+                            <a className="cta-btn" href="/get-started">Get Started</a>
+                        </>
+                    ) : (
+                        <>
+                            <Link className="login-btn" to="/login">Log in</Link>
+                            <a className="cta-btn" href="/get-started">Get Started</a>
 
-                                    <button className="dropdown-item">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
-                                            <path d="M12 1v6m0 6v6" stroke="currentColor" strokeWidth="2"/>
-                                            <path d="M21 12h-6m-6 0H3" stroke="currentColor" strokeWidth="2"/>
-                                        </svg>
-                                        <span>Preferences</span>
-                                    </button>
-
-                                    <button className="dropdown-item">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                                            <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2"/>
-                                        </svg>
-                                        <span>Time Tracking</span>
-                                    </button>
-                                </div>
-
-                                <div className="dropdown-divider"></div>
-
-                                <button className="dropdown-item logout-item" onClick={logout}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                        <polyline points="16,17 21,12 16,7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                        <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <div className="user-menu" ref={menuRef}>
+                                <button
+                                    className="user-btn"
+                                    onClick={() => setOpen(!open)}
+                                    aria-haspopup="menu"
+                                    aria-expanded={open}
+                                >
+                                    <div className="avatar">{user?.fullName?.charAt(0) || "U"}</div>
+                                    <svg className={`chevron ${open ? "open" : ""}`} width="14" height="14" viewBox="0 0 24 24" fill="none">
+                                        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                                     </svg>
-                                    <span>Sign Out</span>
                                 </button>
-                            </div>
-                        )}
-                    </div>
 
-                    {/* Mobile-only logout button */}
-                    <button
-                        onClick={logout}
-                        className="mobile-logout-button"
-                    >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <polyline points="16,17 21,12 16,7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                    </button>
+                                {open && (
+                                    <div className="user-dropdown">
+                                        <div className="dropdown-header">
+                                            <div className="avatar large">{user?.fullName?.charAt(0) || "U"}</div>
+                                            <div>
+                                                <div className="user-name">{user?.fullName || "User"}</div>
+                                                <div className="user-email">{user?.email || "user@example.com"}</div>
+                                            </div>
+                                        </div>
+                                        <hr className="dropdown-divider" />
+                                        <button className="dropdown-item logout" onClick={logout}>
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                                <polyline points="16,17 21,12 16,7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                                <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                            </svg>
+                                            Sign out
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </nav>
