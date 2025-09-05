@@ -1,5 +1,6 @@
 package com.Folio.attendance_app.controller;
 
+import com.Folio.attendance_app.constants.SessionConstants;
 import com.Folio.attendance_app.model.Staff;
 import com.Folio.attendance_app.service.AuthService;
 import com.Folio.attendance_app.service.SessionService;
@@ -29,14 +30,17 @@ public class AuthController {
 
             if (result.isSuccess()) {
                 Staff staff = result.getStaff();
-                // keep your existing session behavior
                 sessionService.createUserSession(session, staff);
 
-                // also return a token for the FE (dummy for now; swap for real JWT later)
                 return ResponseEntity.ok(Map.of(
                         "message", "Login successful",
-                        "staff", staff,
-                        "token", "dummy.jwt.token"
+                        "staff", Map.of(
+                                "id", staff.getEmployeeId(),
+                                "name", staff.getFullName(),
+                                "email", staff.getEmail(),
+                                "employeeId", staff.getEmployeeId(),
+                                "role", staff.getRole()
+                        )
                 ));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -48,12 +52,16 @@ public class AuthController {
         }
     }
 
-    // ----- SIGNUP (minimal stub for now) -----
+    // ----- SIGNUP -----
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
         try {
-            // TODO: create user via authService (email/password hashing) later
-            return ResponseEntity.noContent().build(); // 204 so FE navigates to /login
+            // For portfolio demo - just return success
+            // In a real app, you'd create the user in the database
+            return ResponseEntity.ok(Map.of(
+                    "message", "Signup successful! You can now log in."
+            ));
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("message", "Signup failed: " + e.getMessage()));
@@ -69,6 +77,32 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("message", "Logout failed"));
+        }
+    }
+
+    // ----- CHECK AUTH STATUS -----
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(HttpSession session) {
+        try {
+            Integer staffId = (Integer) session.getAttribute("STAFF_ID");
+            String staffName = (String) session.getAttribute("STAFF_NAME");
+            String staffRole = (String) session.getAttribute("STAFF_ROLE");
+
+            if (staffId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", "Not authenticated"));
+            }
+
+            return ResponseEntity.ok(Map.of(
+                    "staff", Map.of(
+                            "id", staffId,
+                            "name", staffName,
+                            "role", staffRole
+                    )
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Not authenticated"));
         }
     }
 

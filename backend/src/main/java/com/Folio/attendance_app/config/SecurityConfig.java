@@ -24,9 +24,8 @@ public class SecurityConfig {
                 .cors(cors -> {}) // enable CORS with the bean below
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().permitAll()
+                        .anyRequest().permitAll() // Keep everything open for portfolio demo
                 );
-        // Removed sessionManagement() settings to keep things simple
         return http.build();
     }
 
@@ -36,7 +35,7 @@ public class SecurityConfig {
         cfg.setAllowedOrigins(List.of("http://localhost:5173"));
         cfg.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
         cfg.setAllowedHeaders(List.of("*"));
-        cfg.setAllowCredentials(false); // FE is using Authorization header, not cookies
+        cfg.setAllowCredentials(true); // Changed to true for session cookies
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cfg);
         return source;

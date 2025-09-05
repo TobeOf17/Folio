@@ -10,16 +10,16 @@ const LoginPage: React.FC = () => {
     const [rememberMe, setRememberMe] = useState(false);
 
     const navigate = useNavigate(); // add this
-
-    const handleSubmit = async (e: React.FormEvent) => { // make it async
+    const [error, setError] = useState("");
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError("");
         try {
-            await login({ email, password }); // calls your service
-            navigate("/"); // redirect after success
+            await login({ email, password });
+            navigate("/admin-dashboard");
         } catch (err: any) {
-            console.error("Login failed:", err.message);
+            setError(err.message || "Login failed");
         }
-        console.log("Login attempt:", { email, password, rememberMe });
     };
 
     return (
@@ -38,6 +38,7 @@ const LoginPage: React.FC = () => {
                                 <h1 className="auth-title">Welcome back</h1>
                                 <p className="auth-subtitle">Sign in to your account to continue</p>
                             </div>
+                            {error && <div className="error-message">{error}</div>}
 
                             <form className="auth-form" onSubmit={handleSubmit}>
                                 <div className="form-group">

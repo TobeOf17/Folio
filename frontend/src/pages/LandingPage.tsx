@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "../components/Navbar.tsx";
 import FeatureCard from "../components/FeatureCard";
 import {Link} from "react-router-dom";
+import AttendanceHeroIllustration from "../components/AttendanceHeroIllustration.tsx";
 
 import {
     CalendarLinkIcon,
@@ -24,60 +25,31 @@ const LandingPage: React.FC = () => {
                 <div className="container grid-12 center-y">
                     <div className="col-12 md-col-7">
                         <h1 className="hero-title">
-                            Easy scheduling <span className="accent">ahead</span>
+                            Attendance management <span className="accent">simplified</span>
                         </h1>
                         <p className="hero-sub">
-                            Share availability once, let people choose a time, and skip the back-and-forth.
+                            Register your company, add your team, and start tracking attendance in minutes. No more spreadsheets or manual timekeeping.
                         </p>
 
                         <div className="hero-form grid-12">
-                            <input type="email" className="input col-12 md-col-7" placeholder="Enter your email" />
-                            <button className="btn btn-primary col-12 md-col-5">Create your free account</button>
-                            <p className="form-note col-12">No credit card required.</p>
+                            <input type="email" className="input col-12 md-col-7" placeholder="Company email address" />
+                            <Link to="/company-registration" className="btn btn-primary col-12 md-col-5">
+                                Register your company
+                            </Link>
+                            <p className="form-note col-12">Free 30-day trial. No credit card required.</p>
                         </div>
                     </div>
 
-                    {/* Replaced the preview card with a testimonial + metrics panel */}
                     <div className="col-12 md-col-5">
-                        <div className="card card-showcase">
-                            <div className="quote">
-                                <div className="stars" aria-label="5 stars">★★★★★</div>
-                                <p>
-                                    "Folio cut our scheduling time by <b>70%</b>. Clients book in seconds and our no-shows dropped."
-                                </p>
-                                <div className="person">
-                                    <div className="avatar" />
-                                    <div>
-                                        <div className="name">Tola A.</div>
-                                        <div className="role">Operations Lead, BrightLabs</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="metrics">
-                                <div className="metric">
-                                    <div className="kpi">70%</div>
-                                    <div className="label">Less back-and-forth</div>
-                                </div>
-                                <div className="metric">
-                                    <div className="kpi">4 min</div>
-                                    <div className="label">Avg. time to book</div>
-                                </div>
-                                <div className="metric">
-                                    <div className="kpi">−38%</div>
-                                    <div className="label">No-shows</div>
-                                </div>
-                            </div>
-                        </div>
+                        <AttendanceHeroIllustration />
                     </div>
                 </div>
             </section>
 
-            {/* Updated brand carousel with SVG images */}
+            {/* Updated brand carousel - keeping existing structure */}
             <section className="marquee">
                 <div className="container">
                     <div className="marquee-track">
-                        {/* First set of brand images */}
                         {Array.from({ length: 13 }, (_, i) => (
                             <img
                                 key={`set1-${i}`}
@@ -86,7 +58,6 @@ const LandingPage: React.FC = () => {
                                 className="brand-logo"
                             />
                         ))}
-                        {/* Second set for seamless loop */}
                         {Array.from({ length: 13 }, (_, i) => (
                             <img
                                 key={`set2-${i}`}
@@ -95,7 +66,6 @@ const LandingPage: React.FC = () => {
                                 className="brand-logo"
                             />
                         ))}
-                        {/* Third set for extra seamless transition */}
                         {Array.from({ length: 13 }, (_, i) => (
                             <img
                                 key={`set3-${i}`}
@@ -112,56 +82,56 @@ const LandingPage: React.FC = () => {
                 <div className="container">
                     <div className="section-head">
                         <span className="eyebrow">Features</span>
-                        <h2 className="section-title">Everything you need to book faster</h2>
-                        <p className="section-sub">Powerful scheduling that adapts to your workflow.</p>
+                        <h2 className="section-title">Everything your company needs for attendance</h2>
+                        <p className="section-sub">Powerful attendance tracking that scales with your organization.</p>
                     </div>
 
                     <div className="grid-12 gap">
                         <div className="col-12 sm-col-6 lg-col-4">
                             <FeatureCard
                                 icon={<CalendarLinkIcon />}
-                                title="Share once, book forever"
-                                text="Send a single link. Your live availability stays in sync."
+                                title="Quick staff onboarding"
+                                text="Add employees in seconds. They can start clocking in immediately."
                             />
                         </div>
 
                         <div className="col-12 sm-col-6 lg-col-4">
                             <FeatureCard
                                 icon={<RulesIcon />}
-                                title="Control the rules"
-                                text="Buffers, daily limits, minimum notice, and custom durations."
+                                title="Smart attendance rules"
+                                text="Set overtime limits, break requirements, and location-based check-ins."
                             />
                         </div>
 
                         <div className="col-12 sm-col-6 lg-col-4">
                             <FeatureCard
                                 icon={<TeamIcon />}
-                                title="Team scheduling"
-                                text="Round-robin, collective, and one-to-one for teams."
+                                title="Team management"
+                                text="Organize by departments, shifts, and roles. Perfect for any company size."
                             />
                         </div>
 
                         <div className="col-12 sm-col-6 lg-col-4">
                             <FeatureCard
                                 icon={<WorkflowIcon />}
-                                title="Workflows & reminders"
-                                text="Automatic confirmations and reminders reduce no-shows."
+                                title="Automated reports"
+                                text="Generate payroll reports, attendance summaries, and compliance docs."
                             />
                         </div>
 
                         <div className="col-12 sm-col-6 lg-col-4">
                             <FeatureCard
                                 icon={<EmbedIcon />}
-                                title="Embeds & integrations"
-                                text="Add Folio to your site and connect favorite tools."
+                                title="Mobile & web access"
+                                text="Employees can clock in from anywhere. Managers access dashboards online."
                             />
                         </div>
 
                         <div className="col-12 sm-col-6 lg-col-4">
                             <FeatureCard
                                 icon={<TimeZoneIcon />}
-                                title="Time-zone smart"
-                                text="Guests always see times in their local time zone."
+                                title="Multi-location support"
+                                text="Perfect for companies with multiple offices or remote workers."
                             />
                         </div>
                     </div>
@@ -173,14 +143,14 @@ const LandingPage: React.FC = () => {
                 <div className="container">
                     <div className="section-head">
                         <span className="eyebrow">How it works</span>
-                        <h2 className="section-title">Set up in minutes</h2>
+                        <h2 className="section-title">Get started in 3 simple steps</h2>
                     </div>
 
                     <div className="grid-12 gap">
                         {[
-                            { n: "1", t: "Connect your calendar", d: "Sync Google, Outlook, or iCloud in seconds." },
-                            { n: "2", t: "Set your rules", d: "Choose meeting types, buffers, and working hours." },
-                            { n: "3", t: "Share your link", d: "Guests pick a time. Events land on everyone's calendar." },
+                            { n: "1", t: "Register your company", d: "Create your company account and set up basic info in under 2 minutes." },
+                            { n: "2", t: "Add your employees", d: "Invite your team or add them manually. They'll get instant access." },
+                            { n: "3", t: "Start tracking", d: "Employees clock in/out. You get real-time attendance data and reports." },
                         ].map((s, i) => (
                             <div key={i} className="col-12 md-col-4">
                                 <div className="card step-card">
@@ -199,14 +169,14 @@ const LandingPage: React.FC = () => {
                 <div className="container">
                     <div className="section-head">
                         <span className="eyebrow">Pricing</span>
-                        <h2 className="section-title">Start free, upgrade anytime</h2>
+                        <h2 className="section-title">Simple pricing that scales with you</h2>
                     </div>
 
                     <div className="grid-12 gap">
                         {[
-                            { name: "Basic", price: "Free", features: ["1 event type", "Email notifications", "Embed link"] },
-                            { name: "Pro", price: "$12/mo", features: ["Unlimited event types", "Reminders", "Team scheduling"] },
-                            { name: "Business", price: "$20/mo", features: ["Workflows", "SSO", "Advanced integrations"] },
+                            { name: "Starter", price: "Free", features: ["Up to 5 employees", "Basic attendance tracking", "Export reports"] },
+                            { name: "Professional", price: "$4/employee/mo", features: ["Unlimited employees", "Advanced reports", "Shift management"] },
+                            { name: "Enterprise", price: "Custom", features: ["Multi-location support", "API access", "Dedicated support"] },
                         ].map((p, i) => (
                             <div key={i} className="col-12 md-col-4">
                                 <div className="card pricing-card soft">
@@ -215,7 +185,7 @@ const LandingPage: React.FC = () => {
                                     <ul className="bullet-list tight">
                                         {p.features.map((f, j) => <li key={j}>{f}</li>)}
                                     </ul>
-                                    <button className="btn btn-primary w-full">Choose {p.name}</button>
+                                    <button className="btn btn-primary w-full">Start with {p.name}</button>
                                 </div>
                             </div>
                         ))}
@@ -228,14 +198,14 @@ const LandingPage: React.FC = () => {
                 <div className="container">
                     <div className="section-head">
                         <span className="eyebrow">FAQ</span>
-                        <h2 className="section-title">Answers to common questions</h2>
+                        <h2 className="section-title">Common questions from companies</h2>
                     </div>
 
                     <div className="grid-12 gap">
                         {[
-                            { q: "Can I keep using Folio for free?", a: "Yes. The Basic plan is free forever with core scheduling features." },
-                            { q: "Does Folio support teams?", a: "Yes. Round-robin, collective, and group scheduling on paid plans." },
-                            { q: "Will Folio handle time zones?", a: "Absolutely. Guests always see times in their local time zone." },
+                            { q: "Can we try Folio for free?", a: "Yes. Start with up to 5 employees free forever. Upgrade anytime as you grow." },
+                            { q: "How do employees clock in?", a: "Mobile app, web browser, or even SMS. Works on any device, anywhere." },
+                            { q: "Is our data secure?", a: "Absolutely. Bank-level encryption and compliance with data protection regulations." },
                         ].map((item, i) => (
                             <div key={i} className="col-12 md-col-4">
                                 <div className="card faq-card soft">
@@ -252,12 +222,12 @@ const LandingPage: React.FC = () => {
             <section className="cta">
                 <div className="container grid-12 center-y">
                     <div className="col-12 md-col-8">
-                        <h2 className="cta-title">Book meetings the easy way with Folio</h2>
-                        <p className="cta-sub">Join thousands of professionals saving hours every week.</p>
+                        <h2 className="cta-title">Ready to modernize your attendance tracking?</h2>
+                        <p className="cta-sub">Join hundreds of companies already saving time and reducing errors with Folio.</p>
                     </div>
                     <div className="col-12 md-col-4 right-md">
-                        <Link to="/signup" className="btn btn-primary w-full md-w-auto">
-                            Get Started Free
+                        <Link to="/company-registration" className="btn btn-primary w-full md-w-auto">
+                            Register Your Company
                         </Link>
                     </div>
                 </div>
@@ -266,7 +236,6 @@ const LandingPage: React.FC = () => {
             {/* MINIMAL FOOTER */}
             <footer className="footer-min">
                 <div className="container grid-12 center-y">
-
                     <div className="col-12 md-col-6 right-md muted">
                         © {new Date().getFullYear()} Folio
                     </div>

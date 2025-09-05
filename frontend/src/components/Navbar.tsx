@@ -1,13 +1,11 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 interface NavbarProps {
-    /** Keep variant for future, but we won’t show a sidebar/hamburger. */
     variant?: "landing" | "dashboard";
 }
 
 const Navbar: React.FC<NavbarProps> = ({ variant = "landing" }) => {
-    // keep the subtle scroll shadow behavior used by .navbar.scrolled
     useEffect(() => {
         const el = document.querySelector(".navbar");
         const onScroll = () => {
@@ -20,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "landing" }) => {
     }, []);
 
     return (
-        <nav className="navbar" role="navigation" aria-label="Main">
+        <nav className="navbar" role="navigation" aria-label="Main" data-variant={variant}>
             <div className="nav-container">
                 {/* Left: brand only (no hamburger) */}
                 <div className="nav-left">

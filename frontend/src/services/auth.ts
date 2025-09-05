@@ -1,32 +1,55 @@
-// src/services/auth.ts
+// src/services/auth.ts - Super Simple Version
 import { api } from "./api";
 
-// Backend expects identifier + password
-export type LoginInput = { email: string; password: string };
+export type LoginInput = {
+    email: string;
+    password: string;
+};
 
-// Optional: if your backend has /signup endpoint
-export type SignupInput = { name: string; email: string; password: string };
+export type SignupInput = {
+    name: string;
+    email: string;
+    password: string;
+};
 
-export async function login({ email, password }: LoginInput) {
-    // Map email -> identifier to match AuthController.LoginRequest
+export type Staff = {
+    id: number;
+    name: string;
+    role: string;
+};
+
+// Simple login - just call backend and return response
+export async function login(credentials: LoginInput) {
     const { data } = await api.post("/api/auth/login", {
-        identifier: email,
-        password,
+        identifier: credentials.email,
+        password: credentials.password,
     });
-    // Backend sets JSESSIONID cookie automatically
-    return data; // includes { message, staff }
+    return data;
 }
 
+// Simple signup - just call backend
+export async function signup(userData: SignupInput) {
+    const { data } = await api.post("/api/auth/signup", userData);
+    return data;
+}
+
+// Simple logout
 export async function logout() {
     await api.post("/api/auth/logout");
 }
 
-export async function signup(input: SignupInput) {
-    // Only call if backend implements /api/auth/signup
-    await api.post("/api/auth/signup", input);
+// Get current user (for checking if logged in)
+export async function getCurrentUser(): Promise<Staff | null> {
+    try {
+        const { data } = await api.get("/api/auth/me");
+        return data.staff;
+    } catch {
+        return null;
+    }
 }
 
-// Client-side helper — truth is on server, but this can help toggle UI
-export function isAuthenticated(): boolean {
-    return document.cookie.includes("JSESSIONID=");
+// Quick auth check
+export async function isLoggedIn(): Promise<boolean> {
+    const user = await getCurrentUser();
+    return user !== null;
 }

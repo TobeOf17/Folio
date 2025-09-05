@@ -3,21 +3,22 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar.tsx";
 import { signup } from "../services/auth";
 import { useNavigate, Link } from "react-router-dom";
-import SignUpIllustration from "../components/SignUpIllustration.tsx";
 
 const SignUpPage: React.FC = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     try {
       await signup({ name, email, password });
-      navigate("/login"); // after successful signup
+      navigate("/login");
     } catch (err: any) {
-      console.error("Signup failed:", err?.message || err);
+      setError(err.message || "Signup failed");
     }
   };
 
@@ -36,7 +37,7 @@ const SignUpPage: React.FC = () => {
                 <h1 className="auth-title">Create your account</h1>
                 <p className="auth-subtitle">Sign up to get started</p>
               </div>
-
+              {error && <div className="error-message">{error}</div>}
               <form className="auth-form" onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="name" className="form-label">Full name</label>
@@ -112,9 +113,7 @@ const SignUpPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="auth-side">
-              <SignUpIllustration />
-            </div>
+
           </div>
         </div>
       </section>
