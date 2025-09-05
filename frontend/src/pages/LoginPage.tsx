@@ -1,15 +1,24 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar.tsx";
 import LoginIllustration from "../components/LoginIllustration.tsx";
+import { login } from "../services/auth";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const navigate = useNavigate(); // add this
+
+    const handleSubmit = async (e: React.FormEvent) => { // make it async
         e.preventDefault();
-        // Handle login logic here
+        try {
+            await login({ email, password }); // calls your service
+            navigate("/"); // redirect after success
+        } catch (err: any) {
+            console.error("Login failed:", err.message);
+        }
         console.log("Login attempt:", { email, password, rememberMe });
     };
 

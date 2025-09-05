@@ -1,63 +1,32 @@
 // src/services/auth.ts
-// Authentication utilities and context types
-import { Staff } from '../types';
+import { api } from "./api";
 
-// Auth context interface
-export interface AuthContextType {
-    isAuthenticated: boolean;
-    user: Staff | null;
-    login: (staff: Staff) => void;
-    logout: () => void;
-    isAdmin: () => boolean;
+// Backend expects identifier + password
+export type LoginInput = { email: string; password: string };
+
+// Optional: if your backend has /signup endpoint
+export type SignupInput = { name: string; email: string; password: string };
+
+export async function login({ email, password }: LoginInput) {
+    // Map email -> identifier to match AuthController.LoginRequest
+    const { data } = await api.post("/api/auth/login", {
+        identifier: email,
+        password,
+    });
+    // Backend sets JSESSIONID cookie automatically
+    return data; // includes { message, staff }
 }
 
-// Authentication utilities
-export const isAdminRole = (roleName: string): boolean => {
-    const adminRoles = ['Admin', 'Administrator', 'Super Admin', 'System Admin'];
-    return adminRoles.includes(roleName);
-};
+export async function logout() {
+    await api.post("/api/auth/logout");
+}
 
-export const hasPermission = (user: Staff | null, permission: string): boolean => {
-    if (!user) return false;
-    
-    // For now, simple role-based permissions
-    // This can be expanded to include specific permissions per role
-    switch (permission) {
-        case 'admin:read':
-        case 'admin:write':
-        case 'staff:manage':
-        case 'reports:view':
-            return isAdminRole(user.role.name);
-        case 'attendance:own':
-        case 'profile:edit':
-            return true; // All authenticated users can manage their own data
-        default:
-            return false;
-    }
-};
+export async function signup(input: SignupInput) {
+    // Only call if backend implements /api/auth/signup
+    await api.post("/api/auth/signup", input);
+}
 
-export const getStoredUser = (): Staff | null => {
-    try {
-        const storedUser = localStorage.getItem('user');
-        return storedUser ? JSON.parse(storedUser) : null;
-    } catch (error) {
-        console.error('Error parsing stored user:', error);
-        return null;
-    }
-};
-
-export const storeUser = (user: Staff): void => {
-    try {
-        localStorage.setItem('user', JSON.stringify(user));
-    } catch (error) {
-        console.error('Error storing user:', error);
-    }
-};
-
-export const clearStoredUser = (): void => {
-    try {
-        localStorage.removeItem('user');
-    } catch (error) {
-        console.error('Error clearing stored user:', error);
-    }
-};
+// Client-side helper — truth is on server, but this can help toggle UI
+export function isAuthenticated(): boolean {
+    return document.cookie.includes("JSESSIONID=");
+}

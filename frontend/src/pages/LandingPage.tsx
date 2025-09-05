@@ -1,6 +1,8 @@
 import React from "react";
 import Navbar from "../components/Navbar.tsx";
 import FeatureCard from "../components/FeatureCard";
+import {Link} from "react-router-dom";
+
 import {
     CalendarLinkIcon,
     RulesIcon,
@@ -254,7 +256,9 @@ const LandingPage: React.FC = () => {
                         <p className="cta-sub">Join thousands of professionals saving hours every week.</p>
                     </div>
                     <div className="col-12 md-col-4 right-md">
-                        <button className="btn btn-primary w-full md-w-auto">Get Started Free</button>
+                        <Link to="/signup" className="btn btn-primary w-full md-w-auto">
+                            Get Started Free
+                        </Link>
                     </div>
                 </div>
             </section>

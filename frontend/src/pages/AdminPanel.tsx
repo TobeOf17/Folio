@@ -1,97 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { getSystemStats, getAllRoles } from '../services/api';
-import { SystemStats, Role } from '../types';
+import React from "react";
 
-const AdminPanel = () => {
-    const [stats, setStats] = useState<SystemStats | null>(null);
-    const [roles, setRoles] = useState<Role[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        loadAdminData();
-    }, []);
-
-    const loadAdminData = async () => {
-        setLoading(true);
-        setError(null);
-
-        try {
-            const statsData = await getSystemStats();
-            setStats(statsData);
-
-            const rolesData = await getAllRoles();
-            setRoles(rolesData);
-
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Failed to load admin data');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    if (loading) {
-        return (
-            <div className="loading-container">
-                <div className="loading-text">Loading admin data...</div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="alert-error">
-                <strong>Error:</strong> {error}
-                <button onClick={loadAdminData} className="btn-danger btn-small ml-4">
-                    Retry
-                </button>
-            </div>
-        );
-    }
-
+const AdminPanel: React.FC = () => {
     return (
         <div className="content-wrapper">
-            <h2 className="page-title">Admin Panel</h2>
-
-            {/* Dashboard Stats */}
-            {stats && (
-                <div className="card">
-                    <h3 className="section-title">System Statistics</h3>
-                    <div className="stats-grid">
-                        <div className="stat-card-blue">
-                            <div className="stat-number-blue">{stats.totalStaff}</div>
-                            <div className="stat-label-blue">Total Staff</div>
-                        </div>
-                        <div className="stat-card-green">
-                            <div className="stat-number-green">{stats.presentToday}</div>
-                            <div className="stat-label-green">Present Today</div>
-                        </div>
-                        <div className="stat-card-red">
-                            <div className="stat-number-red">{stats.pendingRequests}</div>
-                            <div className="stat-label-red">Pending Requests</div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Roles Management */}
             <div className="card">
-                <h3 className="section-title">Role Management</h3>
-                <p className="text-sm text-gray-500 mb-4">Manage system roles and permissions</p>
-
-                <div className="space-y-3">
-                    {roles.map((role) => (
-                        <div key={role.roleId} className="flex items-center justify-between p-4 bg-gray-50 rounded-md">
-                            <div>
-                                <p className="font-medium text-gray-900">{role.name}</p>
-                                {role.description && (
-                                    <p className="text-sm text-gray-500">{role.description}</p>
-                                )}
-                            </div>
-                            <div className="text-sm text-gray-500">ID: {role.roleId}</div>
-                        </div>
-                    ))}
-                </div>
+                <h2 className="page-title">Admin Panel</h2>
+                <p className="text-gray-600">
+                    Admin features are paused while we finish Login/Signup. This page is intentionally minimal.
+                </p>
             </div>
         </div>
     );
