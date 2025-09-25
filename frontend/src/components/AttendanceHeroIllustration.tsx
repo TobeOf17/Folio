@@ -39,7 +39,8 @@ const AttendanceHeroIllustration: React.FC<React.SVGProps<SVGSVGElement>> = (pro
             </defs>
 
             {/* exact background */}
-            <rect width="520" height="420" fill="url(#g-blob)" />
+{/* exact background */}
+<rect width="520" height="420" fill="#ffffff" />
             <circle cx="450" cy="90" r="44" fill="url(#g-brand)" opacity="0.08" />
             <circle cx="90" cy="320" r="34" fill="url(#g-brand)" opacity="0.08" />
 

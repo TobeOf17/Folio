@@ -37,8 +37,6 @@ const LoginPage: React.FC = () => {
                         <div className="bg-white border border-border rounded-2xl p-10 shadow-large max-w-lg mx-auto lg:mx-0 w-full">
                             <div className="text-center mb-8">
                                 <div className="inline-flex items-center gap-3 mb-4">
-                                    <div className="w-10 h-10 rounded-lg bg-brand"></div>
-                                    <span className="text-xl font-black tracking-wide">Folio</span>
                                 </div>
                                 <h1 className="text-3xl font-black text-gray-900 mb-2">Welcome back</h1>
                                 <p className="text-text-secondary">Sign in to your account to continue</p>

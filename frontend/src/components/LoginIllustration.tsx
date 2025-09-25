@@ -20,31 +20,19 @@ const LoginIllustration: React.FC = () => {
                 height="auto"
             >
                 <defs>
-                    {/* Original soft background */}
-                    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stopColor="#fde7e7" />
-                        <stop offset="100%" stopColor="#fff" />
-                    </linearGradient>
+{/* Neutral radial glow */}
+<radialGradient id="g-blob" cx="40%" cy="45%" r="65%">
+  <stop offset="0%" stopColor="#f6443bff" stopOpacity="0.18" />  {/* blue-500 */}
+  <stop offset="80%" stopColor="#f6443bff" stopOpacity="0.04" />
+  <stop offset="100%" stopColor="#f6443bff" stopOpacity="0" />
+</radialGradient>
 
-                    {/* Brand gloss/shine like SignUp illustration */}
-                    <linearGradient id="g-brand" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stopColor="#dc2626" />
-                        <stop offset="100%" stopColor="#b91c1c" />
-                    </linearGradient>
+{/* Softer background gradient */}
+<linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0%" stopColor="#f3f4f6" />   {/* gray-100 */}
+  <stop offset="100%" stopColor="#fff" />
+</linearGradient>
 
-                    {/* Soft red radial glow behind device */}
-                    <radialGradient id="g-blob" cx="40%" cy="45%" r="65%">
-                        <stop offset="0%" stopColor="#dc2626" stopOpacity="0.18" />
-                        <stop offset="80%" stopColor="#dc2626" stopOpacity="0.04" />
-                        <stop offset="100%" stopColor="#dc2626" stopOpacity="0" />
-                    </radialGradient>
-
-
-                    {/* Sparkle gradient */}
-                    <linearGradient id="g-spark" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                        <stop offset="100%" stopColor="#ffffff" stopOpacity="0.2" />
-                    </linearGradient>
                 </defs>
 
                 {/* Soft red glow (new) */}

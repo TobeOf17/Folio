@@ -28,84 +28,54 @@ const LandingPage: React.FC = () => {
             <Navbar variant="landing" />
 
             {/* HERO */}
-            <section className="pt-18 pb-16 bg-background-gray">
-                <div className="max-w-6xl mx-auto px-6">
-                    <div className="grid grid-cols-12 gap-6 items-center">
-                        <div className="col-span-12 md:col-span-7">
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight text-gray-900 tracking-tight">
-                                <span className="block sm:inline">Attendance management</span>{' '}
-                                <span className="text-brand">simplified</span>
-                            </h1>
-                            <p className="mt-4 text-lg text-gray-600 max-w-2xl">
-                                Register your company, add your team, and start tracking attendance in minutes. No more spreadsheets or manual timekeeping.
-                            </p>
+<section className="pt-18 pb-16 bg-white">
+  <div className="max-w-6xl mx-auto px-6">
+    <div className="relative grid grid-cols-12 gap-6 items-center">
+      {/* TEXT */}
+      <div className="col-span-12 md:col-span-6 xl:col-span-7 text-left z-10 md:pr-6">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight text-gray-900 tracking-tight">
+          {/* allow wrap on md, keep one line on lg+ */}
+          <span className="whitespace-normal lg:whitespace-nowrap inline-block">
+            Attendance management
+          </span>
+          <br />
+          <span className="text-brand">simplified</span>
+        </h1>
 
-                            <div className="mt-6 grid grid-cols-12 gap-3">
-                                <input 
-                                    type="email" 
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="col-span-12 md:col-span-7 h-12 border border-border rounded-xl px-4 text-base bg-white focus:border-brand focus:ring-4 focus:ring-brand/25 outline-none transition-all" 
-                                    placeholder="Company email address" 
-                                />
-                                <button
-                                    onClick={handleRegisterClick}
-                                    className="col-span-12 md:col-span-5 inline-flex items-center justify-center h-12 bg-brand text-white font-semibold rounded-xl hover:bg-brand-hover active:translate-y-px transition-all"
-                                >
-                                    Register your company
-                                </button>
-                                <p className="col-span-12 text-sm text-text-secondary mt-2">
-                                    Free 30-day trial. No credit card required.
-                                </p>
-                            </div>
-                        </div>
+        <p className="mt-4 text-lg text-gray-600 max-w-2xl">
+          Register your company, add your team, and start tracking attendance in minutes.
+          No more spreadsheets or manual timekeeping.
+        </p>
 
-                        <div className="col-span-12 md:col-span-5">
-                            <AttendanceHeroIllustration />
-                        </div>
-                    </div>
-                </div>
-            </section>
+        <div className="mt-6 grid grid-cols-12 gap-3">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="col-span-12 md:col-span-7 h-12 border border-border rounded-xl px-4 text-base bg-white focus:border-brand focus:ring-4 focus:ring-brand/25 outline-none transition-all"
+            placeholder="Company email address"
+          />
+          <button
+            onClick={handleRegisterClick}
+            className="col-span-12 md:col-span-5 inline-flex items-center justify-center h-12 bg-brand text-white font-semibold rounded-xl hover:bg-brand-hover active:translate-y-px transition-all"
+          >
+            Register your company
+          </button>
+          <p className="col-span-12 text-sm text-text-secondary mt-2">
+            Free 30-day trial. No credit card required.
+          </p>
+        </div>
+      </div>
 
-            {/* Brand marquee - fixed animation */}
-            <section className="py-6 bg-background-gray overflow-hidden">
-                <div className="w-full">
-                    <div 
-                        className="relative flex gap-6 whitespace-nowrap"
-                        style={{
-                            maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
-                            WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
-                        }}
-                    >
-                        <div className="flex gap-6 animate-scroll">
-                            {Array.from({ length: 13 }, (_, i) => (
-                                <img
-                                    key={`set1-${i}`}
-                                    src={`/images/brand/brand-${String(i + 1).padStart(2, '0')}.svg`}
-                                    alt={`Brand ${i + 1}`}
-                                    className="h-8 w-auto flex-shrink-0 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300"
-                                />
-                            ))}
-                            {Array.from({ length: 13 }, (_, i) => (
-                                <img
-                                    key={`set2-${i}`}
-                                    src={`/images/brand/brand-${String(i + 1).padStart(2, '0')}.svg`}
-                                    alt={`Brand ${i + 1}`}
-                                    className="h-8 w-auto flex-shrink-0 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300"
-                                />
-                            ))}
-                            {Array.from({ length: 13 }, (_, i) => (
-                                <img
-                                    key={`set3-${i}`}
-                                    src={`/images/brand/brand-${String(i + 1).padStart(2, '0')}.svg`}
-                                    alt={`Brand ${i + 1}`}
-                                    className="h-8 w-auto flex-shrink-0 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300"
-                                />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </section>
+      {/* ILLUSTRATION */}
+<div className="col-span-12 md:col-span-5 md:mt-12 flex justify-center md:justify-end items-center">
+  <AttendanceHeroIllustration />
+</div>
+
+    </div>
+  </div>
+</section>
+
 
             {/* FEATURES */}
             <section id="features" className="py-18 bg-background-gray">
@@ -157,7 +127,7 @@ const LandingPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* HOW IT WORKS */}
+            {/* HOW */}
             <section id="how" className="py-18 bg-surface-alt">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="mb-12">

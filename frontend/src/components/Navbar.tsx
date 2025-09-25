@@ -20,7 +20,7 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "landing" }) => {
 
     const navLinks = [
         { href: "#features", label: "Features" },
-        { href: "#how", label: "How it works" },
+        { href: "#how", label: "How" },
         { href: "#pricing", label: "Pricing" },
         { href: "#faq", label: "FAQ" }
     ];
@@ -49,9 +49,7 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "landing" }) => {
                             aria-label="Folio Home"
                         >
                             <div className="relative">
-                                <div className="w-8 h-8 bg-gradient-to-br from-brand to-brand-hover rounded-lg shadow-sm group-hover:shadow-md transition-shadow flex items-center justify-center">
-                                    <div className="w-3 h-3 bg-white rounded-sm"></div>
-                                </div>
+
                                 {/* Subtle glow effect */}
                                 <div className="absolute inset-0 w-8 h-8 bg-brand/20 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
                             </div>
