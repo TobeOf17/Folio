@@ -1,8 +1,57 @@
-/* Main theme.css - Import all component styles */
+/* Main theme.css - Simplified for Tailwind v4 */
 @import "tailwindcss";
-/* Base styles and variables */
-@import './styles/base-variables.css';
-@import './styles/dashboard-navbar.css';
-@import './styles/landing.css';
-@import 'styles/login.css';
-@import './styles/responsive-mobile.css';
+
+/* Tailwind v4 theme configuration */
+@theme {
+  --color-brand: #dc2626;
+  --color-brand-hover: #b91c1c;
+  --color-brand-light: #fef2f2;
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-text-light: #9ca3af;
+  --color-border: #e5e7eb;
+  --color-border-light: #f3f4f6;
+  --color-background-gray: #f9fafb;
+  --color-surface-alt: #f1f3f4;
+  
+  /* Custom animations */
+  --animate-slide-down: slide-down 0.2s ease-out;
+  --animate-scroll: scroll 30s linear infinite;
+  
+  /* Custom font family */
+  --font-system: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-system);
+  background-color: white;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+/* Custom animations that don't have Tailwind equivalents */
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scroll {
+  0% { 
+    transform: translateX(0); 
+  }
+  100% { 
+    transform: translateX(calc(-100% / 3)); 
+  }
+}
+
+/* Apply animation class */
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
