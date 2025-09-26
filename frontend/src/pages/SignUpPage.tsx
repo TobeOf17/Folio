@@ -85,7 +85,7 @@ const SignUpPage: React.FC = () => {
                         type="text"
                         id="companyName"
                         className="w-full h-12 border border-border rounded-xl px-4 text-base bg-white focus:border-brand focus:ring-4 focus:ring-brand/25 outline-none transition-all"
-                        placeholder="Acme Corporation"
+                        placeholder="ABC Corporation"
                         value={companyName}
                         onChange={(e) => setCompanyName(e.target.value)}
                         required
@@ -100,7 +100,7 @@ const SignUpPage: React.FC = () => {
                         type="email"
                         id="companyEmail"
                         className="w-full h-12 border border-border rounded-xl px-4 text-base bg-white focus:border-brand focus:ring-4 focus:ring-brand/25 outline-none transition-all"
-                        placeholder="admin@acmecorp.com"
+                        placeholder="admin@abccorp.com"
                         value={companyEmail}
                         onChange={(e) => setCompanyEmail(e.target.value)}
                         required
@@ -108,23 +108,18 @@ const SignUpPage: React.FC = () => {
                     </div>
 
                     <div>
-                      <label htmlFor="companySize" className="block text-sm font-semibold text-gray-900 mb-2">
-                        Company Size *
+                      <label htmlFor="companyEmail" className="block text-sm font-semibold text-gray-900 mb-2">
+                        Industry *
                       </label>
-                      <select
-                        id="companySize"
+                      <input
+                        type="email"
+                        id="companyEmail"
                         className="w-full h-12 border border-border rounded-xl px-4 text-base bg-white focus:border-brand focus:ring-4 focus:ring-brand/25 outline-none transition-all"
-                        value={companySize}
-                        onChange={(e) => setCompanySize(e.target.value)}
+                        placeholder="admin@abccorp.com"
+                        value={companyEmail}
+                        onChange={(e) => setCompanyEmail(e.target.value)}
                         required
-                      >
-                        <option value="">Select company size</option>
-                        <option value="1-10">1-10 employees</option>
-                        <option value="11-50">11-50 employees</option>
-                        <option value="51-200">51-200 employees</option>
-                        <option value="201-500">201-500 employees</option>
-                        <option value="500+">500+ employees</option>
-                      </select>
+                      />
                     </div>
                   </div>
                 </div>
@@ -160,7 +155,7 @@ const SignUpPage: React.FC = () => {
                         type="email"
                         id="adminEmail"
                         className="w-full h-12 border border-border rounded-xl px-4 text-base bg-white focus:border-brand focus:ring-4 focus:ring-brand/25 outline-none transition-all"
-                        placeholder="john@acmecorp.com"
+                        placeholder="john@abccorp.com"
                         value={adminEmail}
                         onChange={(e) => setAdminEmail(e.target.value)}
                         required

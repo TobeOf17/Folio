@@ -7,6 +7,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SessionService {
+    private final UserManagementService userManagementService;
+
+    public SessionService(UserManagementService userManagementService) {
+        this.userManagementService = userManagementService;
+    }
 
     public void createUserSession(HttpSession session, Staff staff) {
         session.setAttribute(SessionConstants.STAFF_ID, staff.getStaffId());
@@ -15,7 +20,9 @@ public class SessionService {
     }
 
     public boolean isAdmin(HttpSession session) {
-        String currentRole = (String) session.getAttribute(SessionConstants.STAFF_ROLE);
-        return currentRole != null && currentRole.toLowerCase().contains("admin");
+    Integer staffId = (Integer) session.getAttribute(SessionConstants.STAFF_ID);
+    if (staffId == null) return false;
+    Staff staff = userManagementService.getStaffById(staffId);
+    return staff != null && staff.isAdmin();
     }
 }

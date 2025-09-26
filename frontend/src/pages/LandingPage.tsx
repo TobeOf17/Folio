@@ -28,6 +28,7 @@ const LandingPage: React.FC = () => {
             <Navbar variant="landing" />
 
             {/* HERO */}
+            
 <section className="pt-18 pb-16 bg-white">
   <div className="max-w-6xl mx-auto px-6">
     <div className="relative grid grid-cols-12 gap-6 items-center">

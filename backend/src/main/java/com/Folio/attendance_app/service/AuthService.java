@@ -69,45 +69,6 @@ public class AuthService {
     }
 
     /**
-     * Change password for a staff member
-     */
-    public void changePassword(Integer staffId, String currentPassword, String newPassword) {
-        Staff staff = staffRepository.findById(staffId)
-                .orElseThrow(() -> new RuntimeException("Staff not found with id: " + staffId));
-
-        // Verify current password
-        if (!passwordEncoder.matches(currentPassword, staff.getHashedPassword())) {
-            throw new RuntimeException("Current password is incorrect");
-        }
-
-        // Validate new password (minimum 8 characters)
-        if (newPassword.length() < 8) {
-            throw new RuntimeException("New password must be at least 8 characters long");
-        }
-
-        // Hash and save new password
-        staff.setHashedPassword(hashPassword(newPassword));
-        staffRepository.save(staff);
-    }
-
-    /**
-     * Reset password (admin function)
-     */
-    public String resetPassword(Integer staffId) {
-        Staff staff = staffRepository.findById(staffId)
-                .orElseThrow(() -> new RuntimeException("Staff not found with id: " + staffId));
-
-        // Generate temporary password (you might want to make this more sophisticated)
-        String tempPassword = generateTemporaryPassword();
-
-        // Hash and save new password
-        staff.setHashedPassword(hashPassword(tempPassword));
-        staffRepository.save(staff);
-
-        return tempPassword; // Return plain password to admin (should be sent to user securely)
-    }
-
-    /**
      * Validate password strength
      */
     public boolean isPasswordValid(String password) {
@@ -129,22 +90,7 @@ public class AuthService {
         return true;
     }
 
-    /**
-     * Generate temporary password
-     */
-    private String generateTemporaryPassword() {
-        // Simple temporary password generator
-        // In production, use a more secure method
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuilder password = new StringBuilder();
 
-        for (int i = 0; i < 10; i++) {
-            int index = (int) (Math.random() * chars.length());
-            password.append(chars.charAt(index));
-        }
-
-        return password.toString();
-    }
 
     /**
      * Login attempt (returns staff info if successful)

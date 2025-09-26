@@ -75,8 +75,7 @@ public class StaffController {
     public ResponseEntity<?> createStaff(@Valid @RequestBody Staff staff, HttpSession session) {
         try {
             // Check if current user is admin
-            String currentRole = (String) session.getAttribute("staffRole");
-            if (currentRole == null || !currentRole.toLowerCase().contains("admin")) {
+            if (!isAdmin(session)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body(Map.of("message", "Access denied. Admin privileges required."));
             }
@@ -274,16 +273,20 @@ public class StaffController {
      * Check if current user is authorized (admin or manager)
      */
     private boolean isAuthorized(HttpSession session) {
-        String currentRole = (String) session.getAttribute("staffRole");
-        return currentRole != null && (currentRole.toLowerCase().contains("admin") || currentRole.toLowerCase().contains("manager"));
+    Integer staffId = (Integer) session.getAttribute("staffId");
+    if (staffId == null) return false;
+    Staff staff = userManagementService.getStaffById(staffId);
+    return staff != null && (staff.isAdmin() || (staff.getRole() != null && staff.getRole().getName().toLowerCase().contains("manager")));
     }
 
     /**
      * Check if current user is admin
      */
     private boolean isAdmin(HttpSession session) {
-        String currentRole = (String) session.getAttribute("staffRole");
-        return currentRole != null && currentRole.toLowerCase().contains("admin");
+    Integer staffId = (Integer) session.getAttribute("staffId");
+    if (staffId == null) return false;
+    Staff staff = userManagementService.getStaffById(staffId);
+    return staff != null && staff.isAdmin();
     }
 
     // ==================== REQUEST CLASSES ====================

@@ -60,6 +60,13 @@ public class Staff {
     @Column(name = "employee_id", nullable = false, unique = true, length = 20)
     private String employeeId;
 
+    @Column(name = "admin", nullable = false)
+    private boolean admin = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -69,7 +76,7 @@ public class Staff {
     }
 
     public Staff(int staffId, String fullName, LocalDate dob, String phone, String email,
-                 Gender gender, Role role, Unit unit, String passportPath, String hashedPassword) {
+                 Gender gender, Role role, Unit unit, String passportPath, String hashedPassword, boolean admin, Company company) {
         this.staffId = staffId;
         this.fullName = fullName;
         this.dob = dob;
@@ -80,6 +87,8 @@ public class Staff {
         this.unit = unit;
         this.passportPath = passportPath;
         this.hashedPassword = hashedPassword;
+        this.admin = admin;
+        this.company = company;
     }
 
     public Staff(int staffId, String fullName, LocalDate dob, String phone, String email, Gender gender, String hashedPassword, Role role, Unit unit, String passportPath, String employeeId, LocalDateTime createdAt) {
@@ -98,7 +107,7 @@ public class Staff {
     }
 
     public Staff(String fullName, LocalDate dob, String phone, String email,
-                 Gender gender, Role role, Unit unit, String passportPath, String hashedPassword) {
+                 Gender gender, Role role, Unit unit, String passportPath, String hashedPassword, boolean admin, Company company) {
         this.fullName = fullName;
         this.dob = dob;
         this.phone = phone;
@@ -108,6 +117,8 @@ public class Staff {
         this.unit = unit;
         this.passportPath = passportPath;
         this.hashedPassword = hashedPassword;
+        this.admin = admin;
+        this.company = company;
     }
 
 
@@ -201,6 +212,22 @@ public class Staff {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     @Override
