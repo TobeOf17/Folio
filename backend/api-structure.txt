@@ -1,0 +1,16 @@
+/api/auth/signup     - Create company account
+/api/auth/login      - User login
+/api/auth/logout     - User logout
+/api/auth/me         - Get current user
+
+/api/attendance/sign-in      - Clock in
+/api/attendance/sign-out     - Clock out  
+/api/attendance/my-records   - My attendance history
+/api/attendance/summary      - My attendance summary
+
+/api/admin/dashboard         - Admin dashboard
+/api/admin/staff            - Manage staff
+/api/admin/roles            - Manage roles
+/api/admin/units            - Manage units
+/api/admin/attendance-report - View attendance data
+
