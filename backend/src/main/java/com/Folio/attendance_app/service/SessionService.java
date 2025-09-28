@@ -20,7 +20,7 @@ public class SessionService {
     }
 
     public boolean isAdmin(HttpSession session) {
-    Integer staffId = (Integer) session.getAttribute(SessionConstants.STAFF_ID);
+    Long staffId = (Long) session.getAttribute(SessionConstants.STAFF_ID);
     if (staffId == null) return false;
     Staff staff = userManagementService.getStaffById(staffId);
     return staff != null && staff.isAdmin();

@@ -3,7 +3,9 @@ package com.Folio.attendance_app.service;
 import com.Folio.attendance_app.model.AttendanceLog;
 import com.Folio.attendance_app.model.Staff;
 import com.Folio.attendance_app.model.AttendanceStatus;
+import com.Folio.attendance_app.model.Schedule;
 import com.Folio.attendance_app.repository.AttendanceLogRepository;
+import com.Folio.attendance_app.repository.ScheduleRepository;
 import com.Folio.attendance_app.repository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +24,27 @@ public class AttendanceService {
     @Autowired
     private StaffRepository staffRepository;
 
-    /**
+    @Autowired
+    private ScheduleRepository scheduleRepository;
+
+    private AttendanceStatus determineAttendanceStatus(Staff staff, LocalTime signInTime) {
+    Optional<Schedule> todaysSchedule = scheduleRepository.findTodaysScheduleForStaff(staff);
+    
+    if (todaysSchedule.isEmpty()) {
+        // No schedule means staff shouldn't be working today
+        return AttendanceStatus.ABSENT;
+    }
+    
+    LocalTime shiftStart = todaysSchedule.get().getShift().getShiftType().getStartTime();
+    return signInTime.isAfter(shiftStart) ? AttendanceStatus.LATE : AttendanceStatus.ON_TIME;
+    
+    }
+
+/**
      * Sign in a staff member
      */
-    public AttendanceLog signIn(Integer staffId) {
-        Staff staff = staffRepository.findById(staffId)
+    public AttendanceLog signIn(Long staffId) {
+    Staff staff = staffRepository.findById(staffId)
                 .orElseThrow(() -> new RuntimeException("Staff not found with id: " + staffId));
 
         LocalDate today = LocalDate.now();
@@ -40,18 +58,18 @@ public class AttendanceService {
             throw new RuntimeException("Staff already signed in today");
         }
 
-        // Determine status based on time (assuming 9 AM is start time)
-        AttendanceStatus status = now.isAfter(LocalTime.of(9, 0)) ?
-                AttendanceStatus.LATE : AttendanceStatus.ON_TIME;
+     AttendanceStatus status = determineAttendanceStatus(staff, now);
 
         AttendanceLog log = new AttendanceLog(staff, today, now, null, status);
         return attendanceLogRepository.save(log);
+
+    
     }
 
     /**
      * Sign out a staff member
      */
-    public AttendanceLog signOut(Integer staffId) {
+    public AttendanceLog signOut(Long staffId) {
         Staff staff = staffRepository.findById(staffId)
                 .orElseThrow(() -> new RuntimeException("Staff not found with id: " + staffId));
 
@@ -70,15 +88,6 @@ public class AttendanceService {
         return attendanceLogRepository.save(log);
     }
 
-    /**
-     * Get attendance records for a staff member
-     */
-    public List<AttendanceLog> getStaffAttendance(Integer staffId) {
-        Staff staff = staffRepository.findById(staffId)
-                .orElseThrow(() -> new RuntimeException("Staff not found with id: " + staffId));
-
-        return attendanceLogRepository.findByStaffOrderByDateDesc(staff);
-    }
 
     /**
      * Get attendance records for a specific date
@@ -95,38 +104,9 @@ public class AttendanceService {
     }
 
     /**
-     * Get attendance summary for a staff member in a date range
-     */
-    public AttendanceSummary getAttendanceSummary(Integer staffId, LocalDate startDate, LocalDate endDate) {
-        Staff staff = staffRepository.findById(staffId)
-                .orElseThrow(() -> new RuntimeException("Staff not found with id: " + staffId));
-
-        List<AttendanceLog> logs = attendanceLogRepository
-                .findByStaffAndDateBetween(staff, startDate, endDate);
-
-        long onTimeDays = logs.stream()
-                .filter(log -> log.getStatus() == AttendanceStatus.ON_TIME)
-                .count();
-
-        long lateDays = logs.stream()
-                .filter(log -> log.getStatus() == AttendanceStatus.LATE)
-                .count();
-
-        long absentDays = logs.stream()
-                .filter(log -> log.getStatus() == AttendanceStatus.ABSENT)
-                .count();
-
-        long earlySignOutDays = logs.stream()
-                .filter(log -> log.getStatus() == AttendanceStatus.EARLY_SIGN_OUT)
-                .count();
-
-        return new AttendanceSummary(staff.getFullName(), onTimeDays, lateDays, absentDays, earlySignOutDays, logs.size());
-    }
-
-    /**
      * Mark staff as absent (for admin use)
      */
-    public AttendanceLog markAbsent(Integer staffId, LocalDate date) {
+    public AttendanceLog markAbsent(Long staffId, LocalDate date) {
         Staff staff = staffRepository.findById(staffId)
                 .orElseThrow(() -> new RuntimeException("Staff not found with id: " + staffId));
 
