@@ -8,7 +8,7 @@ const SignUpPage: React.FC = () => {
   // Company information
   const [companyName, setCompanyName] = useState("");
   const [companyEmail, setCompanyEmail] = useState("");
-  const [companySize, setCompanySize] = useState("");
+  const [companyIndustry, setCompanyIndustry] = useState("");
   
   // Admin information
   const [adminName, setAdminName] = useState("");
@@ -25,7 +25,7 @@ const SignUpPage: React.FC = () => {
       await signup({ 
         companyName, 
         companyEmail, 
-        companySize,
+        companyIndustry,
         name: adminName, 
         email: adminEmail, 
         password: adminPassword 
@@ -108,16 +108,16 @@ const SignUpPage: React.FC = () => {
                     </div>
 
                     <div>
-                      <label htmlFor="companyEmail" className="block text-sm font-semibold text-gray-900 mb-2">
+                      <label htmlFor="companyIndustry" className="block text-sm font-semibold text-gray-900 mb-2">
                         Industry *
                       </label>
                       <input
-                        type="email"
-                        id="companyEmail"
+                        type="text"
+                        id="companyIndustry"
                         className="w-full h-12 border border-border rounded-xl px-4 text-base bg-white focus:border-brand focus:ring-4 focus:ring-brand/25 outline-none transition-all"
-                        placeholder="admin@abccorp.com"
-                        value={companyEmail}
-                        onChange={(e) => setCompanyEmail(e.target.value)}
+                        placeholder="Technology"
+                        value={companyIndustry}
+                        onChange={(e) => setCompanyIndustry(e.target.value)}
                         required
                       />
                     </div>

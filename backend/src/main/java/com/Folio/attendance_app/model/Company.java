@@ -25,6 +25,7 @@ public class Company {
         this.name = name;
     }
 
+
     public Long getId() {
         return id;
     }
@@ -39,6 +40,14 @@ public class Company {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
     }
 
     public List<Staff> getStaff() {
