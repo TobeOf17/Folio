@@ -20,9 +20,9 @@ public class SessionService {
     }
 
     public boolean isAdmin(HttpSession session) {
-    Long staffId = (Long) session.getAttribute(SessionConstants.STAFF_ID);
-    if (staffId == null) return false;
-    Staff staff = userManagementService.getStaffById(staffId);
-    return staff != null && staff.isAdmin();
+        Long staffId = (Long) session.getAttribute(SessionConstants.STAFF_ID);
+        if (staffId == null) return false;
+        Staff staff = userManagementService.getStaffById(staffId);
+        return staff != null && staff.isAdmin();
     }
 }

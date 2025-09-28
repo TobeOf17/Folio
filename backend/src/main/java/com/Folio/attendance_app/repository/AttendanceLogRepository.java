@@ -23,4 +23,6 @@ Optional<AttendanceLog> findByStaffAndDate(Staff staff, LocalDate date);
 List<AttendanceLog> findByStaff(Staff staff);
 List<AttendanceLog> findByDate(LocalDate date);
 List<AttendanceLog> findByDateBetween(LocalDate startDate, LocalDate endDate);
+List<AttendanceLog> findByStaffAndDateBetween(Staff staff, LocalDate startDate, LocalDate endDate); 
+
 }

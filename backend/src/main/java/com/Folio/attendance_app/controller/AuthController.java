@@ -19,47 +19,27 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
-
     @Autowired
-    private UserManagementService userManagementService;
-
+    private StaffService staffService;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private UnitService unitService;
+    @Autowired
+    private CompanyService companyService;
     @Autowired
     private SessionService sessionService;
 
-    @Autowired
-    private CompanyService companyService; // You'll need to create this
-
-    /**
-     * Register new company with admin user
-     */
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody SignupRequest request) {
         try {
-            // Create company first
-            Company company = new Company();
-            company.setName(request.getCompanyName());
-            company.setIndustry(request.getIndustry());
+            // Create company
+            Company company = new Company(request.getCompanyName(), request.getIndustry());
             Company savedCompany = companyService.createCompany(company);
 
-            // Create default admin role if it doesn't exist
-            Role adminRole;
-            try {
-                adminRole = userManagementService.getRoleByName("Admin");
-            } catch (RuntimeException e) {
-                adminRole = new Role();
-                adminRole.setName("Admin");
-                adminRole = userManagementService.createRole(adminRole);
-            }
-
-            // Create default unit if it doesn't exist
-            Unit defaultUnit;
-            try {
-                defaultUnit = userManagementService.getUnitByName("Management");
-            } catch (RuntimeException e) {
-                defaultUnit = new Unit();
-                defaultUnit.setName("Management");
-                defaultUnit = userManagementService.createUnit(defaultUnit);
-            }
+            // Create default role and unit
+            Role adminRole = roleService.createRole(new Role("Admin"));
+            Unit defaultUnit = unitService.createUnit(new Unit("Management"));
 
             // Create admin staff
             Staff adminStaff = new Staff();
@@ -70,135 +50,84 @@ public class AuthController {
             adminStaff.setUnit(defaultUnit);
             adminStaff.setCompany(savedCompany);
             adminStaff.setAdmin(true);
-            
-            // Set required fields with defaults
-            adminStaff.setDob(LocalDate.now().minusYears(30)); // Default DOB
-            adminStaff.setPhone("000-000-0000"); // Placeholder phone
-            adminStaff.setGender(Gender.OTHER); // Default gender
-            adminStaff.setEmployeeId("EMP" + System.currentTimeMillis()); // Auto-generated employee ID
+            adminStaff.setDob(LocalDate.now().minusYears(30));
+            adminStaff.setPhone("000-000-0000");
+            adminStaff.setGender(Gender.OTHER);
+            adminStaff.setEmployeeId("EMP" + System.currentTimeMillis());
 
-            Staff savedStaff = userManagementService.createStaff(adminStaff);
+            staffService.createStaff(adminStaff);
 
-            return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of(
-                    "message", "Company and admin account created successfully",
-                    "companyId", savedCompany.getId(),
-                    "adminId", savedStaff.getStaffId()
-                ));
-
+            return ResponseEntity.ok(Map.of("message", "Account created successfully"));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Map.of("message", e.getMessage()));
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
 
-    /**
-     * Login endpoint
-     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpSession session) {
         try {
-            AuthService.LoginResult result = authService.login(request.getIdentifier(), request.getPassword());
-
-            if (result.isSuccess()) {
-                sessionService.createUserSession(session, result.getStaff());
-                
-                return ResponseEntity.ok(Map.of(
-                    "message", "Login successful",
-                    "staff", result.getStaff(),
-                    "sessionId", session.getId()
-                ));
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", result.getMessage()));
-            }
-
+            Staff staff = authService.authenticate(request.getIdentifier(), request.getPassword());
+            sessionService.createUserSession(session, staff);
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Login successful",
+                "isAdmin", staff.isAdmin()
+            ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("message", e.getMessage()));
+                .body(Map.of("message", "Invalid credentials"));
         }
     }
 
-    /**
-     * Logout endpoint
-     */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpSession session) {
-        try {
-            session.invalidate();
-            return ResponseEntity.ok(Map.of("message", "Logout successful"));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("message", "Logout failed"));
-        }
+        session.invalidate();
+        return ResponseEntity.ok(Map.of("message", "Logout successful"));
     }
 
-    /**
-     * Check authentication status
-     */
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(HttpSession session) {
         try {
-            Integer staffId = (Integer) session.getAttribute("staffId");
-
+            Long staffId = (Long) session.getAttribute("staffId");
             if (staffId == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("message", "Not authenticated"));
             }
-
-            Staff staff = userManagementService.getStaffById(staffId);
+            Staff staff = staffService.getStaffById(staffId);
             return ResponseEntity.ok(staff);
-
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("message", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", "Session expired"));
         }
     }
 
-    // ==================== REQUEST CLASSES ====================
-
+    // Request DTOs
     public static class SignupRequest {
         private String companyName;
-        private String companyEmail;
         private String industry;
         private String adminName;
         private String adminEmail;
         private String adminPassword;
-
-        // Constructors
-        public SignupRequest() {}
-
-        // Getters and Setters
+        
+        // Getters and setters...
         public String getCompanyName() { return companyName; }
         public void setCompanyName(String companyName) { this.companyName = companyName; }
-
-        public String getCompanyEmail() { return companyEmail; }
-        public void setCompanyEmail(String companyEmail) { this.companyEmail = companyEmail; }
-
         public String getIndustry() { return industry; }
         public void setIndustry(String industry) { this.industry = industry; }
-
         public String getAdminName() { return adminName; }
         public void setAdminName(String adminName) { this.adminName = adminName; }
-
         public String getAdminEmail() { return adminEmail; }
         public void setAdminEmail(String adminEmail) { this.adminEmail = adminEmail; }
-
         public String getAdminPassword() { return adminPassword; }
         public void setAdminPassword(String adminPassword) { this.adminPassword = adminPassword; }
     }
 
     public static class LoginRequest {
-        private String identifier; // Can be email or employee ID
+        private String identifier;
         private String password;
-
-        // Constructors
-        public LoginRequest() {}
-
-        // Getters and Setters
+        
         public String getIdentifier() { return identifier; }
         public void setIdentifier(String identifier) { this.identifier = identifier; }
-
         public String getPassword() { return password; }
         public void setPassword(String password) { this.password = password; }
     }

@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AttendanceService {
@@ -148,4 +150,30 @@ public class AttendanceService {
         public long getEarlySignOutDays() { return earlySignOutDays; }
         public long getTotalRecords() { return totalRecords; }
     }
+
+    // Add to AttendanceService.java
+public List<AttendanceLog> getStaffAttendance(Long staffId) {
+    Staff staff = staffRepository.findById(staffId)
+            .orElseThrow(() -> new RuntimeException("Staff not found with id: " + staffId));
+    return attendanceLogRepository.findByStaff(staff);
+}
+
+public AttendanceSummary getAttendanceSummary(Long staffId, LocalDate startDate, LocalDate endDate) {
+    Staff staff = staffRepository.findById(staffId)
+            .orElseThrow(() -> new RuntimeException("Staff not found with id: " + staffId));
+    
+    List<AttendanceLog> logs = attendanceLogRepository.findByStaffAndDateBetween(staff, startDate, endDate);
+    
+    Map<AttendanceStatus, Long> statusCounts = logs.stream()
+        .collect(Collectors.groupingBy(AttendanceLog::getStatus, Collectors.counting()));
+
+    return new AttendanceSummary(
+        staff.getFullName(), 
+        statusCounts.getOrDefault(AttendanceStatus.ON_TIME, 0L),
+        statusCounts.getOrDefault(AttendanceStatus.LATE, 0L),
+        statusCounts.getOrDefault(AttendanceStatus.ABSENT, 0L),
+        statusCounts.getOrDefault(AttendanceStatus.EARLY_SIGN_OUT, 0L),
+        logs.size()
+    );
+}
 }

@@ -25,6 +25,11 @@ public class Company {
         this.name = name;
     }
 
+    public Company(String name, String industry) {
+        this.name = name;
+        this.industry = industry;
+    }
+
 
     public Long getId() {
         return id;

@@ -18,7 +18,6 @@ public class UserManagementService {
     @Autowired
     private UnitService unitService;
 
-    // Delegate to individual services
     public Staff getStaffById(Long id) {
         return staffService.getStaffById(id);
     }
