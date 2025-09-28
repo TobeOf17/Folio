@@ -3,7 +3,7 @@ package com.Folio.attendance_app.service;
 import com.Folio.attendance_app.model.Staff;
 import com.Folio.attendance_app.repository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,8 +14,8 @@ public class AuthService {
     @Autowired
     private StaffRepository staffRepository;
 
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     /**
      * Authenticate user with email and password
      */
