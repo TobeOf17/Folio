@@ -48,15 +48,7 @@ export const formatDateTime = (date: Date): string => {
     });
 };
 
-/**
- * Calculate hours between two times
- */
-export const calculateHours = (startTime: string, endTime: string): number => {
-    const start = new Date(`2000-01-01 ${startTime}`);
-    const end = new Date(`2000-01-01 ${endTime}`);
-    const diff = end.getTime() - start.getTime();
-    return Math.abs(diff) / (1000 * 60 * 60); // Convert milliseconds to hours
-};
+
 
 /**
  * Get role-specific badge styling
@@ -108,19 +100,6 @@ export const getAttendanceStatusColor = (status: string): string => {
     return statusColors[status] || 'text-gray-600 bg-gray-50 border-gray-200';
 };
 
-/**
- * Format hours to readable string
- */
-export const formatHours = (hours: number): string => {
-    const wholeHours = Math.floor(hours);
-    const minutes = Math.round((hours - wholeHours) * 60);
-
-    if (minutes === 0) {
-        return `${wholeHours}h`;
-    }
-
-    return `${wholeHours}h ${minutes}m`;
-};
 
 /**
  * Check if user is admin based on role
@@ -130,50 +109,7 @@ export const checkIsAdmin = (role: string): boolean => {
     return adminRoles.includes(role);
 };
 
-/**
- * Get time ago string
- */
-export const getTimeAgo = (date: Date): string => {
-    const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
 
-    if (diffInMinutes < 1) return 'Just now';
-    if (diffInMinutes < 60) return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
 
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
 
-    const diffInDays = Math.floor(diffInHours / 24);
-    return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
-};
 
-/**
- * Validate time format (HH:MM)
- */
-export const isValidTimeFormat = (time: string): boolean => {
-    const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
-    return timeRegex.test(time);
-};
-
-/**
- * Convert 24-hour time to 12-hour format
- */
-export const convertTo12Hour = (time24: string): string => {
-    const [hours, minutes] = time24.split(':');
-    const hour = parseInt(hours, 10);
-    const period = hour >= 12 ? 'PM' : 'AM';
-    const hour12 = hour % 12 || 12;
-
-    return `${hour12}:${minutes} ${period}`;
-};
-
-/**
- * Get shift type based on time
- */
-export const getShiftType = (startTime: string): string => {
-    const hour = parseInt(startTime.split(':')[0], 10);
-
-    if (hour >= 6 && hour < 14) return 'Morning Shift';
-    if (hour >= 14 && hour < 22) return 'Evening Shift';
-    return 'Night Shift';
-};
