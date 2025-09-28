@@ -1,7 +1,15 @@
-// src/context/AuthContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Staff } from '../types';
-import { AuthContextType } from '../services/auth';
+import { authService } from '../services/auth';
+
+export interface AuthContextType {
+  isAuthenticated: boolean;
+  user: Staff | null;
+  login: (staff: Staff) => void;
+  logout: () => void;
+  isAdmin: () => boolean;
+  loading: boolean;
+}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -12,21 +20,45 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<Staff | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    // Check if user is already logged in on app start
+    useEffect(() => {
+        checkAuthStatus();
+    }, []);
+
+    const checkAuthStatus = async () => {
+        try {
+            const response = await authService.getCurrentUser();
+            if (response) {
+                setUser(response);
+                setIsAuthenticated(true);
+            }
+        } catch (error) {
+            // User not authenticated, that's fine
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const login = (staff: Staff) => {
         setUser(staff);
         setIsAuthenticated(true);
-        console.log('User logged in:', staff);
     };
 
-    const logout = () => {
-        setUser(null);
-        setIsAuthenticated(false);
-        console.log('User logged out');
+    const logout = async () => {
+        try {
+            await authService.logout();
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            setUser(null);
+            setIsAuthenticated(false);
+        }
     };
 
     const isAdmin = () => {
-        return user?.role?.name?.toLowerCase().includes('admin') || false;
+        return user?.admin === true;
     };
 
     const value: AuthContextType = {
@@ -34,7 +66,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         user,
         login,
         logout,
-        isAdmin
+        isAdmin,
+        loading
     };
 
     return (
@@ -44,7 +77,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     );
 };
 
-// Custom hook to use auth context
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (context === undefined) {
