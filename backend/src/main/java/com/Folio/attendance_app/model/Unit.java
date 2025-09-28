@@ -2,34 +2,39 @@ package com.Folio.attendance_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+import jakarta.validation.constraints.*;
+
 @Entity
 @Table(name = "unit")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Unit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "unit_id")
-    private int unitId;
+    private Long unitId; 
+
+    @Column(nullable = false, unique = true)
+    @NotBlank(message = "Unit name is required")
+    @Size(max = 100, message = "Unit name must not exceed 100 characters")
     private String name;
 
-    public Unit() {
-    }
+    public Unit() {}
 
     public Unit(String name) {
         this.name = name;
     }
 
-    public Unit(int unitId, String name) {
+    public Unit(Long unitId, String name) { 
         this.unitId = unitId;
         this.name = name;
     }
 
-    public int getUnitId() {
+    public Long getUnitId() {
         return unitId;
     }
 
-    public void setUnitId(int unitId) {
+    public void setUnitId(Long unitId) {
         this.unitId = unitId;
     }
 

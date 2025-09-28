@@ -9,10 +9,11 @@ import java.time.LocalDateTime;
 public class CsvActivityLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int logId;
+    private Long logId;
 
-    @Column(nullable = false)
-    private String performedByEmail;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "performed_by_staff_id", nullable = false)
+    private Staff performedBy;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -28,37 +29,37 @@ public class CsvActivityLog {
 
     public CsvActivityLog() {}
 
-    public CsvActivityLog(String performedByEmail, CsvAction action, String fileName, LocalDateTime timestamp, String statusMessage) {
-        this.performedByEmail = performedByEmail;
+    public CsvActivityLog(Staff performedBy, CsvAction action, String fileName, LocalDateTime timestamp, String statusMessage) {
+        this.performedBy = performedBy;
         this.action = action;
         this.fileName = fileName;
         this.timestamp = timestamp;
         this.statusMessage = statusMessage;
     }
 
-    public CsvActivityLog(int logId, String performedByEmail, CsvAction action, String fileName, LocalDateTime timestamp, String statusMessage) {
+    public CsvActivityLog(Long logId, Staff performedBy, CsvAction action, String fileName, LocalDateTime timestamp, String statusMessage) {
         this.logId = logId;
-        this.performedByEmail = performedByEmail;
+        this.performedBy = performedBy;
         this.action = action;
         this.fileName = fileName;
         this.timestamp = timestamp;
         this.statusMessage = statusMessage;
     }
 
-    public int getLogId() {
+    public Long getLogId() {
         return logId;
     }
 
-    public void setLogId(int logId) {
+    public void setLogId(Long logId) {
         this.logId = logId;
     }
 
-    public String getPerformedByEmail() {
-        return performedByEmail;
+    public Staff getPerformedBy() {
+        return performedBy;
     }
 
-    public void setPerformedByEmail(String performedByEmail) {
-        this.performedByEmail = performedByEmail;
+    public void setPerformedBy(Staff performedBy) {
+        this.performedBy = performedBy;
     }
 
     public CsvAction getAction() {
@@ -97,7 +98,7 @@ public class CsvActivityLog {
     public String toString() {
         return "CsvActivityLog{" +
                 "logId=" + logId +
-                ", performedByEmail='" + performedByEmail + '\'' +
+                ", performedBy=" + performedBy +
                 ", action=" + action +
                 ", fileName='" + fileName + '\'' +
                 ", timestamp=" + timestamp +

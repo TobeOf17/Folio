@@ -2,15 +2,20 @@ package com.Folio.attendance_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "role")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
-    private int roleId;
+    private Long roleId; 
+
+    @Column(nullable = false, unique = true)
+    @NotBlank(message = "Role name is required")
+    @Size(max = 50, message = "Role name must not exceed 50 characters")
     private String name;
 
     public Role() {}
@@ -19,16 +24,16 @@ public class Role {
         this.name = name;
     }
 
-    public Role(int roleId, String name){
+   public Role(Long roleId, String name){
         this.roleId = roleId;
         this.name = name;
     }
 
-    public int getRoleId() {
+    public Long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(int roleId) {
+    public void setRoleId(Long roleId) { 
         this.roleId = roleId;
     }
 

@@ -1,7 +1,6 @@
 package com.Folio.attendance_app.model;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,13 +10,15 @@ public class ShiftRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "request_id")
-    private int requestId;
+    private Long requestId;
 
-    @Column(name = "requester_email", nullable = false)
-    private String requesterEmail;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "requester_staff_id", nullable = false)
+    private Staff requester;
 
-    @Column(name = "requested_with_email", nullable = false)
-    private String requestedWithEmail;
+    @ManyToOne(fetch = FetchType.LAZY)  
+    @JoinColumn(name = "requested_with_staff_id", nullable = false)
+    private Staff requestedWith;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_shift_id", nullable = false)
@@ -38,19 +39,19 @@ public class ShiftRequest {
     public ShiftRequest() {
     }
 
-    public ShiftRequest(String requesterEmail, String requestedWithEmail, Shift fromShift, Shift toShift, ShiftRequestStatus status, LocalDate requestDate) {
-        this.requesterEmail = requesterEmail;
-        this.requestedWithEmail = requestedWithEmail;
+    public ShiftRequest(Staff requester, Staff requestedWith, Shift fromShift, Shift toShift, ShiftRequestStatus status, LocalDate requestDate) {
+        this.requester = requester;
+        this.requestedWith = requestedWith;
         this.fromShift = fromShift;
         this.toShift = toShift;
         this.status = status;
         this.requestDate = requestDate;
     }
 
-    public ShiftRequest(int requestId, String requesterEmail, String requestedWithEmail, Shift fromShift, Shift toShift, ShiftRequestStatus status, LocalDate requestDate) {
+    public ShiftRequest(Long requestId, Staff requester, Staff requestedWith, Shift fromShift, Shift toShift, ShiftRequestStatus status, LocalDate requestDate) {
         this.requestId = requestId;
-        this.requesterEmail = requesterEmail;
-        this.requestedWithEmail = requestedWithEmail;
+        this.requester = requester;
+        this.requestedWith = requestedWith;
         this.fromShift = fromShift;
         this.toShift = toShift;
         this.status = status;
@@ -89,28 +90,31 @@ public class ShiftRequest {
         this.fromShift = fromShift;
     }
 
-    public String getRequestedWithEmail() {
-        return requestedWithEmail;
+    public Staff getRequester() {
+        return requester;
     }
-
-    public void setRequestedWithEmail(String requestedWithEmail) {
-        this.requestedWithEmail = requestedWithEmail;
+    public void setRequester(Staff requester) {
+        this.requester = requester;
     }
-
-    public String getRequesterEmail() {
-        return requesterEmail;
+    public Staff getRequestedWith() {
+        return requestedWith;
     }
-
-    public void setRequesterEmail(String requesterEmail) {
-        this.requesterEmail = requesterEmail;
+    public void setRequestedWith(Staff requestedWith) {
+        this.requestedWith = requestedWith;
+    }
+    public Long getRequestId() {
+        return requestId;
+    }
+    public void setRequestId(Long requestId) {
+        this.requestId = requestId;
     }
 
     @Override
     public String toString() {
         return "ShiftRequest{" +
                 "requestId=" + requestId +
-                ", requesterEmail='" + requesterEmail + '\'' +
-                ", requestedWithEmail='" + requestedWithEmail + '\'' +
+                ", requester=" + requester +
+                ", requestedWith=" + requestedWith +
                 ", fromShift=" + fromShift +
                 ", toShift=" + toShift +
                 ", status=" + status +

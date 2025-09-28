@@ -15,7 +15,7 @@ public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "staff_id")
-    private int staffId;
+    private Long staffId; 
 
     @Column(name = "full_name", nullable = false, length = 100)
     @Size(min = 1, max = 100)
@@ -64,7 +64,7 @@ public class Staff {
     private boolean admin = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
+    @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
     @CreationTimestamp
@@ -75,7 +75,7 @@ public class Staff {
     public Staff() {
     }
 
-    public Staff(int staffId, String fullName, LocalDate dob, String phone, String email,
+    public Staff(Long staffId, String fullName, LocalDate dob, String phone, String email,
                  Gender gender, Role role, Unit unit, String passportPath, String hashedPassword, boolean admin, Company company) {
         this.staffId = staffId;
         this.fullName = fullName;
@@ -91,7 +91,7 @@ public class Staff {
         this.company = company;
     }
 
-    public Staff(int staffId, String fullName, LocalDate dob, String phone, String email, Gender gender, String hashedPassword, Role role, Unit unit, String passportPath, String employeeId, LocalDateTime createdAt) {
+    public Staff(Long staffId, String fullName, LocalDate dob, String phone, String email, Gender gender, String hashedPassword, Role role, Unit unit, String passportPath, String employeeId, LocalDateTime createdAt) {
         this.staffId = staffId;
         this.fullName = fullName;
         this.dob = dob;
@@ -122,11 +122,11 @@ public class Staff {
     }
 
 
-    public int getStaffId() {
+    public Long getStaffId() {
         return staffId;
     }
 
-    public void setStaffId(int staffId) {
+    public void setStaffId(Long staffId) {
         this.staffId = staffId;
     }
 

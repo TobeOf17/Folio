@@ -8,7 +8,7 @@ public class Shift {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "shift_id")
-    private int shiftId;
+    private Long shiftId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit_id", nullable = false)
@@ -28,17 +28,17 @@ public class Shift {
         this.unit = unit;
     }
 
-    public Shift(int shiftId, Unit unit, ShiftType shiftType) {
+    public Shift(Long shiftId, Unit unit, ShiftType shiftType) {
         this.shiftId = shiftId;
         this.unit = unit;
         this.shiftType = shiftType;
     }
 
-    public int getShiftId() {
+    public Long getShiftId() {
         return shiftId;
     }
 
-    public void setShiftId(int shiftId) {
+    public void setShiftId(Long shiftId) {
         this.shiftId = shiftId;
     }
 

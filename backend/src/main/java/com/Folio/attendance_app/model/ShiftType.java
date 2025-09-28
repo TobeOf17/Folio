@@ -9,7 +9,7 @@ public class ShiftType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -24,7 +24,7 @@ public class ShiftType {
 
     public ShiftType() {}
 
-    public ShiftType(int id, String name, LocalTime startTime, LocalTime endTime) {
+    public ShiftType(Long id, String name, LocalTime startTime, LocalTime endTime) {
         this.id = id;
         this.name = name;
         this.startTime = startTime;
@@ -37,11 +37,11 @@ public class ShiftType {
         this.endTime = endTime;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

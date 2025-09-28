@@ -9,7 +9,7 @@ public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_id")
-    private int scheduleId;
+    private Long scheduleId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "staff_id", nullable = false)
@@ -32,18 +32,18 @@ public class Schedule {
         this.shiftDate = shiftDate;
     }
 
-    public Schedule(int scheduleId, Staff staff, Shift shift, LocalDate shiftDate) {
+    public Schedule(Long scheduleId, Staff staff, Shift shift, LocalDate shiftDate) {
         this.scheduleId = scheduleId;
         this.staff = staff;
         this.shift = shift;
         this.shiftDate = shiftDate;
     }
 
-    public int getScheduleId() {
+    public Long getScheduleId() {
         return scheduleId;
     }
 
-    public void setScheduleId(int scheduleId) {
+    public void setScheduleId(Long scheduleId) {
         this.scheduleId = scheduleId;
     }
 

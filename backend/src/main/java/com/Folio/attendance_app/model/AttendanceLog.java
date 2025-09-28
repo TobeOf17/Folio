@@ -11,7 +11,7 @@ import java.time.LocalTime;
 public class AttendanceLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int logId;
+    private Long logId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "staff_id", nullable = false)
@@ -36,7 +36,7 @@ public class AttendanceLog {
         this.status = status;
     }
 
-    public AttendanceLog(int logId, Staff staff, LocalDate date, LocalTime signInTime, LocalTime signOutTime, AttendanceStatus status) {
+    public AttendanceLog(Long logId, Staff staff, LocalDate date, LocalTime signInTime, LocalTime signOutTime, AttendanceStatus status) {
         this.logId = logId;
         this.staff = staff;
         this.date = date;
@@ -45,11 +45,11 @@ public class AttendanceLog {
         this.status = status;
     }
 
-    public int getLogId() {
+    public Long getLogId() {
         return logId;
     }
 
-    public void setLogId(int logId) {
+    public void setLogId(Long logId) {
         this.logId = logId;
     }
 
