@@ -1,12 +1,12 @@
 // src/services/auth.ts
 import { Staff } from '../types';
 
-const API_BASE = 'http://localhost:8080/api'; // Adjust to your backend URL
+const API_BASE = 'http://localhost:8080/api'; 
 
 export interface SignupData {
   companyName: string;
   companyEmail: string;
-  industry?: string;
+  companyIndustry?: string;
   name: string; // Admin name
   email: string; // Admin email
   password: string; // Admin password
@@ -37,7 +37,7 @@ class AuthService {
       body: JSON.stringify({
         companyName: data.companyName,
         companyEmail: data.companyEmail,
-        industry: data.industry || 'General',
+        companyIndustry: data.companyIndustry || 'General',
         adminName: data.name,
         adminEmail: data.email,
         adminPassword: data.password
