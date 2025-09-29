@@ -18,12 +18,12 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "landing" }) => {
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    const navLinks = [
+    const navLinks = variant === "landing" ? [
         { href: "#features", label: "Features" },
         { href: "#how", label: "How" },
         { href: "#pricing", label: "Pricing" },
         { href: "#faq", label: "FAQ" }
-    ];
+    ]: [];
 
     return (
         <nav 

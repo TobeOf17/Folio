@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @CrossOrigin(origins = "*")
 public class AuthController {
 
@@ -109,7 +109,6 @@ public class AuthController {
         private String adminEmail;
         private String adminPassword;
         
-        // Getters and setters...
         public String getCompanyName() { return companyName; }
         public void setCompanyName(String companyName) { this.companyName = companyName; }
         public String getIndustry() { return industry; }

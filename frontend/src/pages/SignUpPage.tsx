@@ -1,40 +1,38 @@
 // src/pages/SignUpPage.tsx
 import React, { useState } from "react";
 import Navbar from "../components/Navbar.tsx";
-import { signup } from "../services/auth";
+import { authService } from "../services/auth";
 import { useNavigate, Link } from "react-router-dom";
 
 const SignUpPage: React.FC = () => {
-  // Company information
   const [companyName, setCompanyName] = useState("");
-  const [companyEmail, setCompanyEmail] = useState("");
   const [companyIndustry, setCompanyIndustry] = useState("");
-  
-  // Admin information
   const [adminName, setAdminName] = useState("");
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
-  
+
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    try {
-      await signup({ 
-        companyName, 
-        companyEmail, 
-        companyIndustry,
-        name: adminName, 
-        email: adminEmail, 
-        password: adminPassword 
-      });
-      navigate("/login");
-    } catch (err: any) {
-      setError(err.message || "Signup failed");
-    }
-  };
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError("");
+  try {
+    await authService.signup({
+      companyName,
+      industry: companyIndustry,
+      adminName,
+      adminEmail,
+      adminPassword,
+    });
+    navigate("/login"); 
+  } catch (err: any) {
+    setError(
+      err?.response?.data?.message || err.message || "Signup failed"
+    );
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-background-gray">
@@ -92,20 +90,6 @@ const SignUpPage: React.FC = () => {
                       />
                     </div>
 
-                    <div>
-                      <label htmlFor="companyEmail" className="block text-sm font-semibold text-gray-900 mb-2">
-                        Company Email *
-                      </label>
-                      <input
-                        type="email"
-                        id="companyEmail"
-                        className="w-full h-12 border border-border rounded-xl px-4 text-base bg-white focus:border-brand focus:ring-4 focus:ring-brand/25 outline-none transition-all"
-                        placeholder="admin@abccorp.com"
-                        value={companyEmail}
-                        onChange={(e) => setCompanyEmail(e.target.value)}
-                        required
-                      />
-                    </div>
 
                     <div>
                       <label htmlFor="companyIndustry" className="block text-sm font-semibold text-gray-900 mb-2">
