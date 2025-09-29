@@ -30,7 +30,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
     setSuccess("Account created successfully!"); 
     setTimeout(() => {
-      navigate("/login");
+      navigate("/login"); 
     }, 2000); 
   } catch (err: any) {
     console.error("Signup error:", err);
