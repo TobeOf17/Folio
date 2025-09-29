@@ -13,12 +13,14 @@ const SignUpPage: React.FC = () => {
 
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(""); 
 
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   setError("");
+  setSuccess("");
   try {
-    const response = await authService.signup({
+    await authService.signup({
       companyName,
       industry: companyIndustry,
       adminName,
@@ -26,11 +28,12 @@ const handleSubmit = async (e: React.FormEvent) => {
       adminPassword,
     });
 
-    navigate("/login", { 
-      state: { message: "Account created! Please login." } 
-    });
+    setSuccess("Account created successfully!"); 
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000); 
   } catch (err: any) {
-    console.error('Signup error:', err); // Debug log
+    console.error("Signup error:", err);
     setError(err.message || "Signup failed");
   }
 };
@@ -62,6 +65,12 @@ const handleSubmit = async (e: React.FormEvent) => {
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-8">
                 {error}
+              </div>
+            )}
+
+            {success && (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-8">
+                {success}
               </div>
             )}
 

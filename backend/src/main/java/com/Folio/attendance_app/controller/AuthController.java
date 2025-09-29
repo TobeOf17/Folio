@@ -44,8 +44,12 @@ public class AuthController {
         } catch (RuntimeException notFound) {
             adminRole = roleService.createRole(new Role("Admin"));
         }
-        Unit defaultUnit = unitService.createUnit(new Unit("Management"));
-
+        Unit defaultUnit;
+        try {
+            defaultUnit = unitService.getUnitByName("Management");
+        } catch (RuntimeException notFound) {
+            defaultUnit = unitService.createUnit(new Unit("Management"));
+        }
             // Create admin staff
             Staff adminStaff = new Staff();
             adminStaff.setFullName(request.getAdminName());
