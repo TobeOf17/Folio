@@ -13,7 +13,7 @@ public class Role {
     @Column(name = "role_id")
     private Long roleId; 
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     @NotBlank(message = "Role name is required")
     @Size(max = 50, message = "Role name must not exceed 50 characters")
     private String name;

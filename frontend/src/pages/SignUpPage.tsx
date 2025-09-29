@@ -18,18 +18,20 @@ const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   setError("");
   try {
-    await authService.signup({
+    const response = await authService.signup({
       companyName,
       industry: companyIndustry,
       adminName,
       adminEmail,
       adminPassword,
     });
-    navigate("/login"); 
+
+    navigate("/login", { 
+      state: { message: "Account created! Please login." } 
+    });
   } catch (err: any) {
-    setError(
-      err?.response?.data?.message || err.message || "Signup failed"
-    );
+    console.error('Signup error:', err); // Debug log
+    setError(err.message || "Signup failed");
   }
 };
 

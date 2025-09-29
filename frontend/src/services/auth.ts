@@ -29,8 +29,12 @@ export const authService = {
   },
 
   async signup(signupData: SignupRequest) {
-    const response = await api.post('/auth/signup', signupData);
-    return response.data;
+    try {
+      const response = await api.post('/auth/signup', signupData);
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Signup failed');
+    }
   },
 
   async logout() {

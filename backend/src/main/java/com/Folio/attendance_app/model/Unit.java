@@ -14,7 +14,7 @@ public class Unit {
     @Column(name = "unit_id")
     private Long unitId; 
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     @NotBlank(message = "Unit name is required")
     @Size(max = 100, message = "Unit name must not exceed 100 characters")
     private String name;

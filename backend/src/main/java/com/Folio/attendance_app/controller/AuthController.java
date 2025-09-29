@@ -38,8 +38,13 @@ public class AuthController {
             Company savedCompany = companyService.createCompany(company);
 
             // Create default role and unit
-            Role adminRole = roleService.createRole(new Role("Admin"));
-            Unit defaultUnit = unitService.createUnit(new Unit("Management"));
+        Role adminRole;
+        try {
+            adminRole = roleService.getRoleByName("Admin");
+        } catch (RuntimeException notFound) {
+            adminRole = roleService.createRole(new Role("Admin"));
+        }
+        Unit defaultUnit = unitService.createUnit(new Unit("Management"));
 
             // Create admin staff
             Staff adminStaff = new Staff();

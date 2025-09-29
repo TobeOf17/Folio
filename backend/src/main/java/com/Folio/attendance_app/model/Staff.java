@@ -60,9 +60,6 @@ public class Staff {
     @Column(name = "employee_id", nullable = false, unique = true, length = 20)
     private String employeeId;
 
-    @Column(name = "admin", nullable = false)
-    private boolean admin = false;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
@@ -71,12 +68,13 @@ public class Staff {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "is_admin", nullable = false)
+    private boolean isAdmin;
 
-    public Staff() {
-    }
+    public Staff() {}
 
     public Staff(Long staffId, String fullName, LocalDate dob, String phone, String email,
-                 Gender gender, Role role, Unit unit, String passportPath, String hashedPassword, boolean admin, Company company) {
+                 Gender gender, Role role, Unit unit, String passportPath, String hashedPassword, boolean isAdmin, Company company) {
         this.staffId = staffId;
         this.fullName = fullName;
         this.dob = dob;
@@ -87,11 +85,11 @@ public class Staff {
         this.unit = unit;
         this.passportPath = passportPath;
         this.hashedPassword = hashedPassword;
-        this.admin = admin;
+        this.isAdmin = isAdmin;
         this.company = company;
     }
 
-    public Staff(Long staffId, String fullName, LocalDate dob, String phone, String email, Gender gender, String hashedPassword, Role role, Unit unit, String passportPath, String employeeId, LocalDateTime createdAt) {
+    public Staff(Long staffId, String fullName, LocalDate dob, String phone, String email, Gender gender, String hashedPassword, Role role, Unit unit, String passportPath, String employeeId, boolean isAdmin, LocalDateTime createdAt) {
         this.staffId = staffId;
         this.fullName = fullName;
         this.dob = dob;
@@ -103,11 +101,12 @@ public class Staff {
         this.unit = unit;
         this.passportPath = passportPath;
         this.employeeId = employeeId;
+        this.isAdmin = isAdmin;
         this.createdAt = createdAt;
     }
 
     public Staff(String fullName, LocalDate dob, String phone, String email,
-                 Gender gender, Role role, Unit unit, String passportPath, String hashedPassword, boolean admin, Company company) {
+                 Gender gender, Role role, Unit unit, String passportPath, String hashedPassword, boolean isAdmin, Company company) {
         this.fullName = fullName;
         this.dob = dob;
         this.phone = phone;
@@ -117,7 +116,7 @@ public class Staff {
         this.unit = unit;
         this.passportPath = passportPath;
         this.hashedPassword = hashedPassword;
-        this.admin = admin;
+        this.isAdmin = isAdmin;
         this.company = company;
     }
 
@@ -215,12 +214,10 @@ public class Staff {
     }
 
     public boolean isAdmin() {
-        return admin;
+        return role != null && "Admin".equalsIgnoreCase(role.getName());
     }
 
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
-    }
+    public void setAdmin(boolean admin) { this.isAdmin = admin; }
 
     public Company getCompany() {
         return company;

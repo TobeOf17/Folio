@@ -36,23 +36,20 @@ public class DataLoader implements CommandLineRunner {
         company.setIndustry("Technology");
         company = companyRepository.save(company);
 
-        // Create Roles
-        Role adminRole = new Role("ADMIN");
-        Role managerRole = new Role("MANAGER");
-        Role staffRole = new Role("STAFF");
-        
-        roleRepository.save(adminRole);
-        roleRepository.save(managerRole);
-        roleRepository.save(staffRole);
+        Role adminRole = roleRepository.findByNameIgnoreCase("Admin")
+            .orElseGet(() -> roleRepository.save(new Role("Admin")));
+        Role managerRole = roleRepository.findByNameIgnoreCase("Manager")
+            .orElseGet(() -> roleRepository.save(new Role("Manager")));
+        Role staffRole = roleRepository.findByNameIgnoreCase("Staff")
+            .orElseGet(() -> roleRepository.save(new Role("Staff")));
 
-        // Create Units
-        Unit itUnit = new Unit("IT Department");
-        Unit hrUnit = new Unit("HR Department");
-        Unit financeUnit = new Unit("Finance Department");
-        
-        unitRepository.save(itUnit);
-        unitRepository.save(hrUnit);
-        unitRepository.save(financeUnit);
+        // Check if units exist before creating
+        Unit itUnit = unitRepository.findByNameIgnoreCase("IT Department")
+            .orElseGet(() -> unitRepository.save(new Unit("IT Department")));
+        Unit hrUnit = unitRepository.findByNameIgnoreCase("HR Department")
+            .orElseGet(() -> unitRepository.save(new Unit("HR Department")));
+        Unit financeUnit = unitRepository.findByNameIgnoreCase("Finance Department")
+            .orElseGet(() -> unitRepository.save(new Unit("Finance Department")));
 
         // Create Admin User
         Staff admin = new Staff();
