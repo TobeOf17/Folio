@@ -30,7 +30,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="border-b border-gray-200 bg-white sticky top-0 z-40">
+      <header className="border-b border-gray-100 bg-white sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-8">
@@ -64,46 +64,63 @@ const Dashboard = () => {
       <main className="max-w-7xl mx-auto px-6 py-8">
         {/* Page Title */}
         <div className="mb-8">
-          <h2 className="text-3xl font-black text-gray-900">Good morning, {adminName.split(' ')[0]}</h2>
-          <p className="mt-1 text-gray-600">Here's what's happening with your team today</p>
+          <h2 className="text-5xl font-black text-gray-900">Good morning, <span className="text-red-500">{adminName.split(' ')[0]}</span></h2>
+          <p className="mt-2 text-lg text-gray-600">Here's what's happening with your team today</p>
         </div>
 
         {/* Stats Grid - Airbnb style */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {stats.map((stat, i) => (
             <div key={i} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow cursor-pointer">
               <p className="text-sm text-gray-600 mb-2">{stat.label}</p>
               <p className="text-4xl font-semibold text-gray-900 mb-1">{stat.value}</p>
-              <p className="text-xs text-gray-500">{stat.subtext}</p>
+              <p className="text-xs text-red-500 font-medium">{stat.subtext}</p>
             </div>
           ))}
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mb-12">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {[
+              { icon: Users, label: 'Add Employee' },
+              { icon: FileText, label: 'Generate Report' },
+              { icon: Clock, label: 'View Attendance' },
+              { icon: Settings, label: 'Settings' }
+            ].map((action, i) => (
+              <button key={i} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-red-500 transition-all text-center">
+                <action.icon className="w-6 h-6 text-gray-700 mx-auto mb-3" />
+                <span className="text-sm font-semibold text-gray-900">{action.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Recent Activity */}
           <div className="lg:col-span-2">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-900">Recent Activity</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
               <button className="text-sm font-medium text-gray-900 hover:underline flex items-center">
                 View all <ChevronRight className="w-4 h-4 ml-1" />
               </button>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {recentActivity.map((activity, i) => (
-                <div key={i} className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-lg transition-shadow">
+                <div key={i} className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-700 text-sm font-semibold">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center text-gray-700 text-xs font-semibold">
                         {activity.name.split(' ').map(n => n[0]).join('')}
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900">{activity.name}</p>
-                        <p className="text-sm text-gray-500">{activity.action} · {activity.dept}</p>
+                        <p className="text-sm font-medium text-gray-900">{activity.name}</p>
+                        <p className="text-xs text-gray-500">{activity.action} · {activity.dept}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm text-gray-600">{activity.time}</p>
+                      <p className="text-xs text-gray-600">{activity.time}</p>
                     </div>
                   </div>
                 </div>
@@ -113,20 +130,20 @@ const Dashboard = () => {
 
           {/* Department Status */}
           <div>
-            <div className="mb-6">
-              <h3 className="text-xl font-bold text-gray-900">Department Status</h3>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Department Status</h3>
               <p className="text-sm text-gray-500 mt-1">Today's attendance by team</p>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-4">
               {departments.map((dept, i) => (
-                <div key={i} className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-lg transition-shadow">
+                <div key={i} className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between mb-3">
                     <span className="font-semibold text-gray-900">{dept.name}</span>
                     <span className="text-sm text-gray-600">{dept.present}/{dept.total}</span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-2">
                     <div 
-                      className="bg-gray-900 h-2 rounded-full" 
+                      className="bg-red-500 h-2 rounded-full" 
                       style={{ width: `${dept.rate}%` }}
                     ></div>
                   </div>
@@ -134,24 +151,6 @@ const Dashboard = () => {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="mt-12 pt-8 border-t border-gray-200">
-          <h3 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              { icon: Users, label: 'Add Employee' },
-              { icon: FileText, label: 'Generate Report' },
-              { icon: Clock, label: 'View Attendance' },
-              { icon: Settings, label: 'Settings' }
-            ].map((action, i) => (
-              <button key={i} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow text-center">
-                <action.icon className="w-6 h-6 text-gray-700 mx-auto mb-3" />
-                <span className="text-sm font-medium text-gray-900">{action.label}</span>
-              </button>
-            ))}
           </div>
         </div>
       </main>
