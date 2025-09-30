@@ -3,6 +3,7 @@ import { Users, Clock, FileText, Settings, Bell, ChevronRight, TrendingUp } from
 
 const Dashboard = () => {
   const adminName = "Sarah Chen";
+  const role = "Manager";
   const department = "Engineering";
 
   const stats = [
@@ -73,12 +74,12 @@ const Dashboard = () => {
         {/* Page Title */}
         <div className="mb-8">
           <div className="flex items-center gap-3">
-            <h2 className="text-5xl font-black text-gray-900">Good morning, <span className="text-red-500">{adminName.split(' ')[0]}</span></h2>
-            <svg className="w-12 h-12 text-yellow-400 animate-spin" style={{ animationDuration: '8s' }} fill="currentColor" viewBox="0 0 20 20">
+            <h2 className="text-5xl font-black text-gray-900">Good morning, <span className="text-brand">{adminName.split(' ')[0]}</span></h2>
+            <svg className="w-12 h-12 text-brand animate-spin" style={{ animationDuration: '8s' }} fill="currentColor" viewBox="0 0 20 20">
               <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
             </svg>
           </div>
-          <p className="mt-2 text-lg text-gray-600">{department} Department · Here's what's happening with your team today</p>
+          <p className="mt-2 text-lg text-gray-600">{role} in {department} Department </p>
         </div>
 
         {/* Stats Grid - Airbnb style */}
@@ -87,7 +88,7 @@ const Dashboard = () => {
             <div key={i} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-md transition-shadow cursor-pointer">
               <p className="text-sm text-gray-600 mb-2">{stat.label}</p>
               <p className="text-4xl font-semibold text-gray-900 mb-1">{stat.value}</p>
-              <p className="text-xs text-red-500 font-medium">{stat.subtext}</p>
+              <p className="text-xs text-brand font-medium">{stat.subtext}</p>
             </div>
           ))}
         </div>
@@ -101,7 +102,7 @@ const Dashboard = () => {
               { icon: Clock, label: 'Shift Management' },
               { icon: Settings, label: 'View Attendance' }
             ].map((action, i) => (
-              <button key={i} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-red-500 transition-all text-center">
+              <button key={i} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
                 <action.icon className="w-6 h-6 text-gray-700 mx-auto mb-3" />
                 <span className="text-sm font-semibold text-gray-900">{action.label}</span>
               </button>
@@ -158,7 +159,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 pt-3 border-t border-gray-100">
-                    <button className="flex-1 text-sm font-semibold text-white bg-red-500 hover:bg-red-600 py-2 px-4 rounded-lg transition-colors">
+                    <button className="flex-1 text-sm font-semibold text-white bg-brand hover:bg-red-600 py-2 px-4 rounded-lg transition-colors">
                       Approve
                     </button>
                     <button className="flex-1 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 py-2 px-4 rounded-lg transition-colors">
