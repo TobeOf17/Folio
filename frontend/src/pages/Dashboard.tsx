@@ -74,7 +74,7 @@ const Dashboard = () => {
         {/* Page Title */}
         <div className="mb-8">
           <div className="flex items-center gap-3">
-            <h2 className="text-5xl font-black text-gray-900">Good morning, <span className="text-brand">{adminName.split(' ')[0]}</span></h2>
+            <h2 className="text-6xl font-black text-gray-900">Good morning, <span className="text-brand">{adminName.split(' ')[0]}</span></h2>
             <svg className="w-12 h-12 text-brand animate-spin" style={{ animationDuration: '8s' }} fill="currentColor" viewBox="0 0 20 20">
               <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
             </svg>
@@ -82,10 +82,10 @@ const Dashboard = () => {
           <p className="mt-2 text-lg text-gray-600">{role} in {department} Department </p>
         </div>
 
-        {/* Stats Grid - Airbnb style */}
+        {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {stats.map((stat, i) => (
-            <div key={i} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-md transition-shadow cursor-pointer">
+            <div key={i} className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:shadow-gray-180 hover:shadow-md transition-shadow cursor-pointer">
               <p className="text-sm text-gray-600 mb-2">{stat.label}</p>
               <p className="text-4xl font-semibold text-gray-900 mb-1">{stat.value}</p>
               <p className="text-xs text-brand font-medium">{stat.subtext}</p>
@@ -102,7 +102,7 @@ const Dashboard = () => {
               { icon: Clock, label: 'Shift Management' },
               { icon: Settings, label: 'View Attendance' }
             ].map((action, i) => (
-              <button key={i} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
+              <button key={i} className="bg-white border-3 border-black-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
                 <action.icon className="w-6 h-6 text-gray-700 mx-auto mb-3" />
                 <span className="text-sm font-semibold text-gray-900">{action.label}</span>
               </button>
@@ -122,7 +122,7 @@ const Dashboard = () => {
             </div>
             <div className="space-y-3">
               {recentActivity.map((activity, i) => (
-                <div key={i} className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-red-100 hover:shadow-md transition-shadow">
+                <div key={i} className="bg-white border-2 border-gray-200 rounded-xl p-4 hover:shadow-red-100 hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <div className="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center text-gray-700 text-xs font-semibold">
@@ -150,7 +150,7 @@ const Dashboard = () => {
             </div>
             <div className="space-y-4">
               {shiftSwapRequests.map((request, i) => (
-                <div key={i} className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-red-100 hover:shadow-md transition-shadow">
+                <div key={i} className="bg-white border-2 border-gray-200 rounded-xl p-5 hover:shadow-red-100 hover:shadow-md transition-shadow">
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <p className="font-semibold text-gray-900">{request.from} → {request.to}</p>

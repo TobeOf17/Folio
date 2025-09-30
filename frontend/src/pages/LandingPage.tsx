@@ -53,7 +53,7 @@ const LandingPage: React.FC = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="col-span-12 md:col-span-7 h-12 border border-border rounded-xl px-4 text-base bg-white focus:border-brand focus:ring-4 focus:ring-brand/25 outline-none transition-all"
+            className="col-span-12 md:col-span-7 h-12 border-2 border-border rounded-xl px-4 text-base bg-white focus:border-brand focus:ring-4 focus:ring-brand/25 outline-none transition-all"
             placeholder="Company email address"
           />
           <button
@@ -158,46 +158,9 @@ const LandingPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* PRICING */}
-            <section id="pricing" className="py-18 bg-background-gray">
-                <div className="max-w-6xl mx-auto px-6">
-                    <div className="mb-12">
-                        <span className="inline-block text-xs font-black uppercase tracking-wider text-brand bg-brand-light border border-red-200 rounded-full px-3 py-1">
-                            Pricing
-                        </span>
-                        <h2 className="mt-2 text-3xl font-black text-gray-900">
-                            Simple pricing that scales with you
-                        </h2>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {[
-                            { name: "Starter", price: "Free", features: ["Up to 5 employees", "Basic attendance tracking", "Export reports"] },
-                            { name: "Professional", price: "$4/employee/mo", features: ["Unlimited employees", "Advanced reports", "Shift management"] },
-                            { name: "Enterprise", price: "Custom", features: ["Multi-location support", "API access", "Dedicated support"] },
-                        ].map((plan, i) => (
-                            <div key={i} className="bg-white border border-border-light rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-gray-300 transition-all">
-                                <h3 className="text-lg font-bold text-gray-900 mb-2">{plan.name}</h3>
-                                <div className="text-3xl font-black text-gray-900 mb-3">{plan.price}</div>
-                                <ul className="space-y-2 mb-6">
-                                    {plan.features.map((feature, j) => (
-                                        <li key={j} className="text-text-secondary flex items-start">
-                                            <span className="text-brand mr-2">•</span>
-                                            {feature}
-                                        </li>
-                                    ))}
-                                </ul>
-                                <button className="w-full inline-flex items-center justify-center h-11 bg-brand text-white font-semibold rounded-xl hover:bg-brand-hover active:translate-y-px transition-all">
-                                    Start with {plan.name}
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
 
             {/* FAQ */}
-            <section id="faq" className="py-18 bg-surface-alt">
+            <section id="faq" className="py-18 bg-gray-60">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="mb-12">
                         <span className="inline-block text-xs font-black uppercase tracking-wider text-brand bg-brand-light border border-red-200 rounded-full px-3 py-1">
