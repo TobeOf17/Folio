@@ -1,210 +1,77 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import api from '../api/client';
-import { getGreeting, formatDate, formatTime } from '../utils/helpers';
+import React, { useState } from 'react';
+import { Home, Users, Clock, FileText, Settings, Bell, Menu, X, TrendingUp, AlertCircle } from 'lucide-react';
 
-interface DashboardStats {
-  totalStaff: number;
-  totalRoles: number;
-  totalUnits: number;
-}
-
-const Dashboard: React.FC = () => {
-  const { user, logout, isAdmin, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
+const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [dataLoading, setDataLoading] = useState(false);
-  const [attendanceStatus, setAttendanceStatus] = useState<'signed-out' | 'signed-in'>('signed-out');
+  const adminName = "Sarah Chen";
 
-  useEffect(() => {
-    if (authLoading) return; // wait until AuthContext finishes checking
-    if (!user) {
-      navigate('/login', { replace: true });
-      return;
-    }
-    loadDashboardData();
-  }, [authLoading, user, navigate]);
-
-  const loadDashboardData = async () => {
-    try {
-      setDataLoading(true);
-      if (isAdmin()) {
-        const response = await api.get('/admin/dashboard');
-        setStats(response.data);
-      }
-    } catch (error) {
-      console.error('Failed to load dashboard data:', error);
-    } finally {
-      setDataLoading(false);
-    }
-  };
-
-  const handleSignIn = async () => {
-    try {
-      await api.post('/attendance/sign-in');
-      setAttendanceStatus('signed-in');
-      alert('Signed in successfully!');
-    } catch (error: any) {
-      alert(error.response?.data?.message || 'Failed to sign in');
-    }
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await api.post('/attendance/sign-out');
-      setAttendanceStatus('signed-out');
-      alert('Signed out successfully!');
-    } catch (error: any) {
-      alert(error.response?.data?.message || 'Failed to sign out');
-    }
-  };
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
-
-  const menuItems = [
-    { 
-      label: 'Dashboard', 
-      icon: '📊', 
-      onClick: () => {}, 
-      active: true 
-    },
-    { 
-      label: 'My Attendance', 
-      icon: '📅', 
-      onClick: () => alert('Coming soon'), 
-      disabled: false 
-    },
-    ...(isAdmin() ? [
-      { 
-        label: 'Manage Staff', 
-        icon: '👥', 
-        onClick: () => alert('Coming soon'), 
-        disabled: false 
-      },
-      { 
-        label: 'Manage Roles', 
-        icon: '🏷️', 
-        onClick: () => alert('Coming soon'), 
-        disabled: false 
-      },
-      { 
-        label: 'Manage Units', 
-        icon: '🏢', 
-        onClick: () => alert('Coming soon'), 
-        disabled: false 
-      },
-      { 
-        label: 'Reports', 
-        icon: '📈', 
-        onClick: () => alert('Coming soon'), 
-        disabled: false 
-      }
-    ] : []),
-    { 
-      label: 'Shift Management', 
-      icon: '🔄', 
-      onClick: () => alert('Coming soon - Shift Management'), 
-      disabled: true,
-      badge: 'Soon'
-    },
-    { 
-      label: 'Shift Swapping', 
-      icon: '↔️', 
-      onClick: () => alert('Coming soon - Shift Swapping'), 
-      disabled: true,
-      badge: 'Soon'
-    },
+  const stats = [
+    { label: 'Total Employees', value: '248', change: '+12 this month', icon: Users, trend: 'up' },
+    { label: 'Present Today', value: '231', change: '93% attendance', icon: Clock, trend: 'up' },
+    { label: 'On Leave', value: '12', change: '5 pending requests', icon: FileText, trend: 'neutral' },
+    { label: 'Late Arrivals', value: '5', change: 'Down from 8', icon: AlertCircle, trend: 'down' }
   ];
-    if (authLoading || dataLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-600">Loading...</div>
-      </div>
-    );
-  }
 
+  const recentActivity = [
+    { name: 'John Smith', action: 'Clocked in', time: '09:02 AM', status: 'success' },
+    { name: 'Sarah Johnson', action: 'Clocked out', time: '05:45 PM', status: 'success' },
+    { name: 'Mike Davis', action: 'Late arrival', time: '09:30 AM', status: 'warning' },
+    { name: 'Emily Chen', action: 'Clocked in', time: '08:55 AM', status: 'success' },
+    { name: 'Tom Wilson', action: 'Leave approved', time: '08:30 AM', status: 'info' }
+  ];
+
+  const departments = [
+    { name: 'Engineering', present: 45, total: 50, rate: 90 },
+    { name: 'Sales', present: 32, total: 35, rate: 91 },
+    { name: 'Marketing', present: 18, total: 20, rate: 90 },
+    { name: 'Support', present: 28, total: 30, rate: 93 }
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside 
-        className={`fixed top-0 left-0 z-40 h-screen transition-transform ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 w-64 bg-white border-r border-gray-200`}
-      >
-        <div className="h-full flex flex-col">
-          {/* Logo */}
-          <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200">
-            <span className="text-xl font-black text-gray-900">Folio</span>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
-            >
-              ✕
-            </button>
-          </div>
-
-          {/* User Info */}
-          <div className="p-4 border-b border-gray-200">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-brand text-white flex items-center justify-center font-bold">
-                {user?.fullName?.charAt(0) || 'U'}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 truncate">
-                  {user?.fullName}
-                </p>
-                <p className="text-xs text-gray-500 truncate">
-                  {user?.role?.name}
-                </p>
-              </div>
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r-2 border-red-100 transform transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+        <div className="flex items-center justify-between p-6 border-b-2 border-red-100">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center font-black text-white text-lg shadow-lg shadow-red-200">
+              F
             </div>
+            <span className="text-2xl font-black text-gray-900">Folio</span>
           </div>
+          <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-gray-600">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+        
+        <nav className="p-4 space-y-2">
+          <a href="#" className="flex items-center space-x-3 px-4 py-3 bg-gradient-to-r from-red-50 to-red-50/50 border-2 border-red-200 rounded-xl text-red-600 font-semibold shadow-sm">
+            <Home className="w-5 h-5" />
+            <span>Dashboard</span>
+          </a>
+          <a href="#" className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-2 hover:border-red-100 rounded-xl transition-all font-medium">
+            <Users className="w-5 h-5" />
+            <span>Employees</span>
+          </a>
+          <a href="#" className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-2 hover:border-red-100 rounded-xl transition-all font-medium">
+            <Clock className="w-5 h-5" />
+            <span>Attendance</span>
+          </a>
+          <a href="#" className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-2 hover:border-red-100 rounded-xl transition-all font-medium">
+            <FileText className="w-5 h-5" />
+            <span>Reports</span>
+          </a>
+          <a href="#" className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-2 hover:border-red-100 rounded-xl transition-all font-medium">
+            <Settings className="w-5 h-5" />
+            <span>Settings</span>
+          </a>
+        </nav>
 
-          {/* Navigation */}
-          <nav className="flex-1 overflow-y-auto p-4">
-            <ul className="space-y-1">
-              {menuItems.map((item, index) => (
-                <li key={index}>
-                  <button
-                    onClick={item.onClick}
-                    disabled={item.disabled}
-                    className={`w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      item.active
-                        ? 'bg-brand text-white'
-                        : item.disabled
-                        ? 'text-gray-400 cursor-not-allowed'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    <span className="flex items-center gap-3">
-                      <span>{item.icon}</span>
-                      <span>{item.label}</span>
-                    </span>
-                    {item.badge && (
-                      <span className="px-2 py-0.5 text-xs bg-gray-200 text-gray-600 rounded-full">
-                        {item.badge}
-                      </span>
-                    )}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Logout */}
-          <div className="p-4 border-t border-gray-200">
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
-            >
-              <span>🚪</span>
-              <span>Logout</span>
+        <div className="absolute bottom-6 left-4 right-4">
+          <div className="bg-gradient-to-br from-red-50 to-white border-2 border-red-200 rounded-xl p-4 shadow-sm">
+            <p className="text-sm font-bold text-gray-900 mb-1">Need Help?</p>
+            <p className="text-xs text-gray-600 mb-3">Check our documentation</p>
+            <button className="w-full bg-red-500 text-white text-sm font-semibold py-2 rounded-lg hover:bg-red-600 transition-colors">
+              View Docs
             </button>
           </div>
         </div>
@@ -212,142 +79,145 @@ const Dashboard: React.FC = () => {
 
       {/* Main Content */}
       <div className="lg:ml-64">
-        {/* Top Bar */}
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-gray-600">
-              {formatDate(new Date())} • {formatTime(new Date())}
+        {/* Header */}
+        <header className="bg-white border-b-2 border-red-100 sticky top-0 z-40">
+          <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center space-x-4">
+              <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-gray-600">
+                <Menu className="w-6 h-6" />
+              </button>
+              <div>
+                <h1 className="text-2xl font-black text-gray-900">{adminName}'s Dashboard</h1>
+                <p className="text-sm text-gray-500">Welcome back! Here's what's happening today.</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <button className="relative p-2.5 text-gray-600 hover:bg-red-50 rounded-xl transition-colors border-2 border-transparent hover:border-red-200">
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white"></span>
+              </button>
+              <div className="flex items-center space-x-3 bg-red-50 border-2 border-red-200 rounded-xl px-4 py-2">
+                <div className="w-9 h-9 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center text-white font-bold shadow-sm">
+                  {adminName.split(' ').map(n => n[0]).join('')}
+                </div>
+                <div className="hidden sm:block">
+                  <div className="text-sm font-bold text-gray-900">{adminName}</div>
+                  <div className="text-xs text-gray-500">Administrator</div>
+                </div>
+              </div>
             </div>
           </div>
         </header>
 
-        {/* Dashboard Content */}
+        {/* Content */}
         <main className="p-6">
-          {/* Welcome Section */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-black text-gray-900">
-              {getGreeting()}, {user?.fullName?.split(' ')[0]}!
-            </h1>
-            <p className="text-gray-600 mt-1">
-              Welcome back to your attendance dashboard
-            </p>
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {stats.map((stat, i) => (
+              <div key={i} className="bg-white rounded-2xl border-2 border-red-100 p-6 hover:shadow-xl hover:-translate-y-1 hover:border-red-300 transition-all">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`w-12 h-12 ${
+                    i === 0 ? 'bg-blue-50 text-blue-600' :
+                    i === 1 ? 'bg-green-50 text-green-600' :
+                    i === 2 ? 'bg-yellow-50 text-yellow-600' :
+                    'bg-red-50 text-red-600'
+                  } rounded-xl flex items-center justify-center shadow-sm`}>
+                    <stat.icon className="w-6 h-6" />
+                  </div>
+                  {stat.trend === 'up' && <TrendingUp className="w-4 h-4 text-green-500" />}
+                </div>
+                <p className="text-sm font-medium text-gray-600 mb-1">{stat.label}</p>
+                <p className="text-3xl font-black text-gray-900 mb-2">{stat.value}</p>
+                <p className="text-xs text-gray-500">{stat.change}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Recent Activity */}
+            <div className="lg:col-span-2 bg-white rounded-2xl border-2 border-red-100 p-6 hover:shadow-lg transition-shadow">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-black text-gray-900">Recent Activity</h2>
+                <button className="text-sm text-red-500 font-bold hover:text-red-600 hover:underline">View All →</button>
+              </div>
+              <div className="space-y-3">
+                {recentActivity.map((activity, i) => (
+                  <div key={i} className="flex items-center justify-between p-4 bg-gray-50 hover:bg-red-50 rounded-xl border-2 border-transparent hover:border-red-200 transition-all">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-11 h-11 bg-white border-2 border-red-200 rounded-xl flex items-center justify-center text-gray-700 font-bold shadow-sm">
+                        {activity.name.split(' ').map(n => n[0]).join('')}
+                      </div>
+                      <div>
+                        <p className="font-bold text-gray-900">{activity.name}</p>
+                        <p className="text-sm text-gray-600">{activity.action}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-gray-700 mb-1">{activity.time}</p>
+                      <span className={`inline-block px-3 py-1 text-xs font-bold rounded-lg border-2 ${
+                        activity.status === 'success' ? 'bg-green-50 text-green-700 border-green-200' : 
+                        activity.status === 'warning' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
+                        'bg-blue-50 text-blue-700 border-blue-200'
+                      }`}>
+                        {activity.status === 'success' ? 'On Time' : activity.status === 'warning' ? 'Late' : 'Approved'}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Department Attendance */}
+            <div className="bg-white rounded-2xl border-2 border-red-100 p-6 hover:shadow-lg transition-shadow">
+              <h2 className="text-xl font-black text-gray-900 mb-6">Department Status</h2>
+              <div className="space-y-5">
+                {departments.map((dept, i) => (
+                  <div key={i} className="p-4 bg-gray-50 rounded-xl border-2 border-transparent hover:border-red-200 transition-all">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-bold text-gray-900">{dept.name}</span>
+                      <span className="text-sm font-bold text-gray-700">{dept.present}/{dept.total}</span>
+                    </div>
+                    <div className="w-full bg-white border-2 border-red-100 rounded-full h-3 overflow-hidden">
+                      <div 
+                        className="bg-gradient-to-r from-red-500 to-red-600 h-full rounded-full transition-all shadow-sm" 
+                        style={{ width: `${dept.rate}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-xs font-semibold text-gray-600 mt-2">{dept.rate}% present</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Quick Actions */}
-          <div className="mb-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <button
-                onClick={handleSignIn}
-                disabled={attendanceStatus === 'signed-in'}
-                className="p-6 bg-white border-2 border-green-200 rounded-xl hover:border-green-300 hover:shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed text-left"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-2xl">
-                    ✅
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900">Sign In</h3>
-                    <p className="text-sm text-gray-600">Clock in for today</p>
-                  </div>
-                </div>
-              </button>
-
-              <button
-                onClick={handleSignOut}
-                disabled={attendanceStatus === 'signed-out'}
-                className="p-6 bg-white border-2 border-red-200 rounded-xl hover:border-red-300 hover:shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed text-left"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-2xl">
-                    🚪
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900">Sign Out</h3>
-                    <p className="text-sm text-gray-600">Clock out for today</p>
-                  </div>
-                </div>
-              </button>
-            </div>
-          </div>
-
-          {/* Admin Stats */}
-          {isAdmin() && stats && (
-            <div className="mb-8">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">System Overview</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-6 bg-white border border-gray-200 rounded-xl">
-                  <div className="text-3xl font-black text-brand mb-2">
-                    {stats.totalStaff}
-                  </div>
-                  <div className="text-sm font-medium text-gray-600">
-                    Total Staff
-                  </div>
-                </div>
-
-                <div className="p-6 bg-white border border-gray-200 rounded-xl">
-                  <div className="text-3xl font-black text-brand mb-2">
-                    {stats.totalRoles}
-                  </div>
-                  <div className="text-sm font-medium text-gray-600">
-                    Roles
-                  </div>
-                </div>
-
-                <div className="p-6 bg-white border border-gray-200 rounded-xl">
-                  <div className="text-3xl font-black text-brand mb-2">
-                    {stats.totalUnits}
-                  </div>
-                  <div className="text-sm font-medium text-gray-600">
-                    Units/Departments
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Coming Soon Features */}
-          <div>
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Coming Soon</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="mt-6 bg-gradient-to-br from-red-50 to-white rounded-2xl border-2 border-red-200 p-6 shadow-sm">
+            <h2 className="text-xl font-black text-gray-900 mb-5">Quick Actions</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {[
-                { title: 'My Attendance History', icon: '📊' },
-                { title: 'Attendance Summary', icon: '📈' },
-                { title: 'Shift Management', icon: '🔄' },
-                { title: 'Shift Swapping', icon: '↔️' },
-                { title: 'Leave Requests', icon: '🏖️' },
-                { title: 'Team Calendar', icon: '📅' },
-              ].map((feature, index) => (
-                <div
-                  key={index}
-                  className="p-4 bg-gray-100 border border-gray-200 rounded-xl opacity-60"
-                >
-                  <div className="text-2xl mb-2">{feature.icon}</div>
-                  <div className="text-sm font-medium text-gray-700">
-                    {feature.title}
+                { icon: Users, label: 'Add Employee', color: 'from-blue-500 to-blue-600' },
+                { icon: FileText, label: 'Generate Report', color: 'from-green-500 to-green-600' },
+                { icon: Clock, label: 'View Attendance', color: 'from-yellow-500 to-yellow-600' },
+                { icon: Settings, label: 'Settings', color: 'from-red-500 to-red-600' }
+              ].map((action, i) => (
+                <button key={i} className="flex flex-col items-center justify-center p-5 bg-white border-2 border-red-200 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-red-300 transition-all">
+                  <div className={`w-12 h-12 bg-gradient-to-br ${action.color} rounded-xl flex items-center justify-center mb-3 shadow-md`}>
+                    <action.icon className="w-6 h-6 text-white" />
                   </div>
-                </div>
+                  <span className="text-sm font-bold text-gray-900">{action.label}</span>
+                </button>
               ))}
             </div>
           </div>
         </main>
       </div>
 
-      {/* Sidebar Overlay for Mobile */}
+      {/* Overlay */}
       {sidebarOpen && (
-        <div
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
-        />
+        ></div>
       )}
     </div>
   );
