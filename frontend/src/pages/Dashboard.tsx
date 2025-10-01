@@ -1,11 +1,34 @@
-import React, { useState } from 'react';
-import { Users, Clock, FileText, Settings, Bell, ChevronRight, TrendingUp } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Users, Clock, FileText, Settings, Bell, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Staff } from '../types';
+import api from '../api/client';
 
 const Dashboard = () => {
-  const adminName = "Sarah Chen";
-  const role = "Manager";
-  const department = "Engineering";
+const [staffData, setStaffData] = useState<Staff | null>(null);
+const adminName = staffData?.fullName || "Loading...";
+const role = staffData?.role?.name || "Loading...";
+const department = staffData?.unit?.name || "Loading...";
+
+useEffect(() => {
+  const fetchStaffData = async () => {
+    try {
+      const staffId = sessionStorage.getItem('staffId');
+      
+      if (!staffId) {
+        console.error('No staff ID found');
+        return;
+      }
+
+      const response = await api.get(`api/staff/${staffId}`);
+      setStaffData(response.data);
+    } catch (err) {
+      console.error('Error fetching staff data:', err);
+    }
+  };
+
+  fetchStaffData();
+}, []);
 
   const stats = [
     { label: 'Total Employees', value: '248', subtext: '+12 this month' },
@@ -21,20 +44,6 @@ const Dashboard = () => {
     { name: 'Emily Chen', action: 'Clocked in', time: '08:55 AM', dept: 'Support' },
     { name: 'Tom Wilson', action: 'Leave approved', time: '08:30 AM', dept: 'Engineering' },
     { name: 'Lisa Anderson', action: 'Clocked in', time: '08:45 AM', dept: 'Sales' }
-  ];
-
-  const departments = [
-    { name: 'Engineering', present: 45, total: 50, rate: 90 },
-    { name: 'Sales', present: 32, total: 35, rate: 91 },
-    { name: 'Marketing', present: 18, total: 20, rate: 90 },
-    { name: 'Support', present: 28, total: 30, rate: 93 }
-  ];
-
-  const shifts = [
-    { name: 'Morning Shift', time: '8:00 AM - 4:00 PM', employees: 15, status: 'Active' },
-    { name: 'Afternoon Shift', time: '12:00 PM - 8:00 PM', employees: 12, status: 'Active' },
-    { name: 'Night Shift', time: '8:00 PM - 4:00 AM', employees: 8, status: 'Scheduled' },
-    { name: 'Weekend Shift', time: 'Sat-Sun 9:00 AM - 5:00 PM', employees: 10, status: 'Scheduled' }
   ];
 
   const shiftSwapRequests = [
@@ -93,7 +102,7 @@ const Dashboard = () => {
               <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
             </svg>
           </div>
-          <p className="mt-2 text-lg text-gray-600">{role} in {department} Department </p>
+          <p className="mt-2 text-lg text-gray-600">{role} in {department} </p>
         </div>
 
         {/* Stats Grid */}

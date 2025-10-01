@@ -1,5 +1,6 @@
 package com.Folio.attendance_app.controller;
 
+import com.Folio.attendance_app.constants.SessionConstants;
 import com.Folio.attendance_app.model.*;
 import com.Folio.attendance_app.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,12 +99,12 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(HttpSession session) {
         try {
-            Long staffId = (Long) session.getAttribute("staffId");
+            Long staffId = (Long) session.getAttribute(SessionConstants.STAFF_ID); // Use the constant
             if (staffId == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("message", "Not authenticated"));
             }
-            Staff staff = staffService.getStaffById(staffId);
+            Staff staff = staffService.getStaffByIdWithDetails(staffId); // Use the method that loads relationships
             return ResponseEntity.ok(staff);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

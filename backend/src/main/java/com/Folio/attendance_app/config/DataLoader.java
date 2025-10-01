@@ -54,7 +54,7 @@ public class DataLoader implements CommandLineRunner {
         // Create Admin User
         Staff admin = new Staff();
         admin.setEmployeeId("EMP001");
-        admin.setFullName("Admin User");
+        admin.setFullName("Sarah Ogunlesi");
         admin.setEmail("admin@company.com");
         admin.setPhone("1234567890");
         admin.setDob(LocalDate.of(1985, 1, 1));

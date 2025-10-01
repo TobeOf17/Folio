@@ -172,6 +172,16 @@ public class AppController {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
+    @GetMapping("/staff/{id}")
+    public ResponseEntity<?> getStaffById(@PathVariable Long id, HttpSession session) {
+        try {
+            Long loggedInStaffId = getStaffId(session);
+            Staff staff = staffService.getStaffByIdWithDetails(id);  // Use the new method
+            return ResponseEntity.ok(staff);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
 
     @GetMapping("/attendance/date/{date}")
     public ResponseEntity<?> getAttendanceByDate(

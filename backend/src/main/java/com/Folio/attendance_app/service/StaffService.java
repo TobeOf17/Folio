@@ -22,6 +22,17 @@ public class StaffService {
         return staffRepository.save(staff);
     }
 
+    public Staff getStaffByIdWithDetails(Long id) {
+    Staff staff = staffRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Staff not found with id: " + id));
+    
+    // Force load lazy relationships
+    staff.getRole().getName();
+    staff.getUnit().getName();
+    
+    return staff;
+}
+
     public long getStaffCount() {
     return staffRepository.count();
 }
