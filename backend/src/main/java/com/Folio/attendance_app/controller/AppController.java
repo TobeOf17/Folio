@@ -2,6 +2,7 @@ package com.Folio.attendance_app.controller;
 
 import com.Folio.attendance_app.constants.SessionConstants;
 import com.Folio.attendance_app.model.*;
+import com.Folio.attendance_app.repository.ShiftRequestRepository;
 import com.Folio.attendance_app.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -157,6 +158,97 @@ public class AppController {
             if (!isAdmin(session)) return forbidden();
             List<AttendanceLog> logs = attendanceService.getAttendanceBetweenDates(startDate, endDate);
             return ResponseEntity.ok(logs);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/staff/count")
+    public ResponseEntity<?> getStaffCount(HttpSession session) {
+        try {
+            getStaffId(session); // Verify user is logged in
+            return ResponseEntity.ok(staffService.getStaffCount());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/attendance/date/{date}")
+    public ResponseEntity<?> getAttendanceByDate(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            HttpSession session) {
+        try {
+            if (!isAdmin(session)) return forbidden();
+            List<AttendanceLog> logs = attendanceService.getAttendanceByDate(date);
+            return ResponseEntity.ok(logs);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @Autowired 
+private ShiftRequestRepository shiftRequestRepository;
+
+@GetMapping("/shift-requests/pending")
+public ResponseEntity<?> getPendingShiftRequests(HttpSession session) {
+    try {
+        Long staffId = getStaffId(session);
+        Staff staff = staffService.getStaffById(staffId);
+        
+        List<ShiftRequest> pendingRequests = shiftRequestRepository
+            .findByRequestedWithAndStatus(staff, ShiftRequestStatus.PENDING);
+        
+        return ResponseEntity.ok(pendingRequests);
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+    }
+}
+
+@PostMapping("/shift-requests/{requestId}/approve")
+public ResponseEntity<?> approveShiftRequest(
+        @PathVariable Long requestId,
+        HttpSession session) {
+    try {
+        Long staffId = getStaffId(session);
+        Staff currentStaff = staffService.getStaffById(staffId);
+        
+        ShiftRequest request = shiftRequestRepository.findById(requestId)
+            .orElseThrow(() -> new RuntimeException("Shift request not found"));
+        
+        if (!request.getRequestedWith().getStaffId().equals(currentStaff.getStaffId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of("message", "You can only approve requests made to you"));
+        }
+        
+        request.setStatus(ShiftRequestStatus.APPROVED);
+        shiftRequestRepository.save(request);
+        
+        return ResponseEntity.ok(Map.of("message", "Shift request approved successfully"));
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+    }
+}
+
+    @PostMapping("/shift-requests/{requestId}/decline")
+    public ResponseEntity<?> declineShiftRequest(
+            @PathVariable Long requestId,
+            HttpSession session) {
+        try {
+            Long staffId = getStaffId(session);
+            Staff currentStaff = staffService.getStaffById(staffId);
+            
+            ShiftRequest request = shiftRequestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Shift request not found"));
+            
+            if (!request.getRequestedWith().getStaffId().equals(currentStaff.getStaffId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "You can only decline requests made to you"));
+            }
+            
+            request.setStatus(ShiftRequestStatus.DECLINED);
+            shiftRequestRepository.save(request);
+            
+            return ResponseEntity.ok(Map.of("message", "Shift request declined"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }

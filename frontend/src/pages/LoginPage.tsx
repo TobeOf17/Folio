@@ -19,7 +19,9 @@ const LoginPage: React.FC = () => {
         setError("");
         try {
             const response = await authService.login({ identifier, password });
-            login(response.staff); // Set user in context
+            login(response.staff); 
+            sessionStorage.setItem('staffId', response.staff.staffId.toString());
+
             navigate("/dashboard"); // Navigate after successful login
         } catch (err: any) {
             setError(err.message || "Login failed");

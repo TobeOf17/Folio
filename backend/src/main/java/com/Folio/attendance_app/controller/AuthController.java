@@ -80,6 +80,7 @@ public class AuthController {
             
             return ResponseEntity.ok(Map.of(
                 "message", "Login successful",
+                "staff", staff,
                 "isAdmin", staff.isAdmin()
             ));
         } catch (Exception e) {
