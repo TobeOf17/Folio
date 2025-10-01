@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Users, Clock, FileText, Settings, Bell, ChevronRight, TrendingUp } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const adminName = "Sarah Chen";
@@ -48,9 +49,22 @@ const Dashboard = () => {
       <header className="border-b border-gray-50 bg-white sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-8">
-              <h1 className="text-2xl font-black text-gray-900">Folio</h1>
-            </div>
+            <div className="flex items-center">
+                        <Link 
+                            to="/" 
+                            className="group flex items-center gap-3 hover:opacity-80 transition-opacity"
+                            aria-label="Folio Home"
+                        >
+                            <div className="relative">
+
+                                {/* Subtle glow effect */}
+                                <div className="absolute inset-0 w-8 h-8 bg-brand/20 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
+                            </div>
+                            <span className="text-xl font-black text-gray-900 tracking-tight">
+                                Folio
+                            </span>
+                        </Link>
+                    </div>
             <div className="flex items-center space-x-3">
               <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-full">
                 <Bell className="w-5 h-5" />
