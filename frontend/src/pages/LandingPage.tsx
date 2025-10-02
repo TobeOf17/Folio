@@ -60,11 +60,8 @@ const LandingPage: React.FC = () => {
             onClick={handleRegisterClick}
             className="col-span-12 md:col-span-5 inline-flex items-center justify-center h-12 bg-brand text-white font-semibold rounded-xl hover:bg-brand-hover active:translate-y-px transition-all"
           >
-            Register your company
+            Register Your Company
           </button>
-          <p className="col-span-12 text-sm text-text-secondary mt-2">
-            Free 30-day trial. No credit card required.
-          </p>
         </div>
       </div>
 
