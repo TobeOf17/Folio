@@ -3,7 +3,7 @@ import { AuthProvider } from "./context/AuthContext";
 import SignUpPage from "./pages/SignUpPage.tsx";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
-import Dashboard from "./pages/Dashboard.tsx"; 
+import Dashboard from "./pages/AdminDashboard.tsx"; 
 
 export default function App() {
     return (
