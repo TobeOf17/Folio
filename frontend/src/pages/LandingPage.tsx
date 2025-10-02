@@ -34,13 +34,13 @@ const LandingPage: React.FC = () => {
     <div className="relative grid grid-cols-12 gap-6 items-center">
       {/* TEXT */}
       <div className="col-span-12 md:col-span-6 xl:col-span-7 text-left z-10 md:pr-6">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight text-gray-900 tracking-tight">
+        <h1 className="text-4xl md:text-5xl lg:text-7xl font-black leading-tight text-gray-900 tracking-tight">
           {/* allow wrap on md, keep one line on lg+ */}
           <span className="whitespace-normal lg:whitespace-nowrap inline-block">
-            Attendance management
+            Attendance <br /> <span className="text-black">Management</span>
           </span>
           <br />
-          <span className="text-brand">simplified</span>
+          <span className="text-brand">Simplified</span>
         </h1>
 
         <p className="mt-4 text-lg text-gray-600 max-w-2xl">

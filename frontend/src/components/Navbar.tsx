@@ -21,7 +21,6 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "landing" }) => {
     const navLinks = variant === "landing" ? [
         { href: "#features", label: "Features" },
         { href: "#how", label: "How" },
-        { href: "#pricing", label: "Pricing" },
         { href: "#faq", label: "FAQ" }
     ]: [];
 
