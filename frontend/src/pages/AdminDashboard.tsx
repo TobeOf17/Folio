@@ -117,21 +117,33 @@ useEffect(() => {
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-12">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              { icon: Users, label: 'Employee Management' },
-              { icon: FileText, label: 'Generate Report' },
-              { icon: Clock, label: 'Shift Management' },
-              { icon: Settings, label: 'View Attendance' }
-            ].map((action, i) => (
-              <button key={i} className="bg-white border-3 border-black-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
-                <action.icon className="w-6 h-6 text-gray-700 mx-auto mb-3" />
-                <span className="text-sm font-semibold text-gray-900">{action.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+<div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+  <Link to="/employees">
+    <button className="w-full bg-white border-3 border-black-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
+      <Users className="w-6 h-6 text-gray-700 mx-auto mb-3" />
+      <span className="text-sm font-semibold text-gray-900">Employee Management</span>
+    </button>
+  </Link>
+  
+  <button className="bg-white border-3 border-black-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
+    <FileText className="w-6 h-6 text-gray-700 mx-auto mb-3" />
+    <span className="text-sm font-semibold text-gray-900">Generate Report</span>
+  </button>
+  
+  <button className="bg-white border-3 border-black-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
+    <Clock className="w-6 h-6 text-gray-700 mx-auto mb-3" />
+    <span className="text-sm font-semibold text-gray-900">Shift Management</span>
+  </button>
+  
+  <button className="bg-white border-3 border-black-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
+    <Settings className="w-6 h-6 text-gray-700 mx-auto mb-3" />
+    <span className="text-sm font-semibold text-gray-900">View Attendance</span>
+  </button>
+</div>
+<br />
+<br />
+
+
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

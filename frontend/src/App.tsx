@@ -4,6 +4,7 @@ import SignUpPage from "./pages/SignUpPage.tsx";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/AdminDashboard.tsx"; 
+import EmployeeManagement from "./pages/EmployeeManagement.tsx";
 
 export default function App() {
     return (
@@ -14,6 +15,7 @@ export default function App() {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/signup" element={<SignUpPage />} />
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/employees" element={<EmployeeManagement />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </BrowserRouter>
