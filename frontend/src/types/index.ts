@@ -61,3 +61,32 @@ export interface SignupRequest {
     adminEmail: string;
     adminPassword: string;
 }
+export interface ShiftType {
+  id: number;
+  name: string;
+  startTime: string; 
+  endTime: string;
+}
+
+export interface Shift {
+  shiftId: number;
+  unit: Unit;
+  shiftType: ShiftType;
+}
+
+export interface ShiftRequest {
+  requestId: number;
+  requester: Staff;
+  requestedWith: Staff;
+  fromShift: Shift;
+  toShift: Shift;
+  status: ShiftRequestStatus;
+  requestDate: string; 
+}
+
+export enum ShiftRequestStatus {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+  CANCELLED = "CANCELLED"
+}

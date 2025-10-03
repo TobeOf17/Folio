@@ -181,7 +181,6 @@ useEffect(() => {
           <div>
             <div className="mb-4">
               <h3 className="text-lg font-semibold text-gray-900">Pending Shift Swap Requests</h3>
-              <p className="text-sm text-gray-500 mt-1">Review and approve shift changes</p>
             </div>
             <div className="space-y-4">
               {shiftSwapRequests.map((request, i) => (
