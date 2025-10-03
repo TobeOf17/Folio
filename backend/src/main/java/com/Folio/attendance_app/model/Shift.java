@@ -10,11 +10,11 @@ public class Shift {
     @Column(name = "shift_id")
     private Long shiftId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "unit_id", nullable = false)
     private Unit unit;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "shift_type_id", nullable = false)
     private ShiftType shiftType;
 

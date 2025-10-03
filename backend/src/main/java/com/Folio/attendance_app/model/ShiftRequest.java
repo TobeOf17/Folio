@@ -12,19 +12,19 @@ public class ShiftRequest {
     @Column(name = "request_id")
     private Long requestId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "requester_staff_id", nullable = false)
     private Staff requester;
 
-    @ManyToOne(fetch = FetchType.LAZY)  
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "requested_with_staff_id", nullable = false)
     private Staff requestedWith;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "from_shift_id", nullable = false)
     private Shift fromShift;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "to_shift_id", nullable = false)
     private Shift toShift;
 
