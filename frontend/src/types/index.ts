@@ -80,13 +80,6 @@ export interface ShiftRequest {
   requestedWith: Staff;
   fromShift: Shift;
   toShift: Shift;
-  status: ShiftRequestStatus;
+  status: 'WAITING' | 'PENDING' | 'DECLINED' | 'APPROVED';
   requestDate: string; 
-}
-
-export enum ShiftRequestStatus {
-  PENDING = "PENDING",
-  APPROVED = "APPROVED",
-  REJECTED = "REJECTED",
-  CANCELLED = "CANCELLED"
 }

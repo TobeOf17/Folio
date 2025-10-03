@@ -1,34 +1,80 @@
 import { useEffect, useState } from 'react';
-import { Users, Clock, FileText, Settings, Bell, ChevronRight } from 'lucide-react';
+import { Users, Clock, FileText, Settings, Bell, ChevronRight, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Staff } from '../types';
+import { Staff, ShiftRequest } from '../types';
 import api from '../api/client';
+import { shiftRequestService } from '../api/shiftRequestService';
 
 const Dashboard = () => {
-const [staffData, setStaffData] = useState<Staff | null>(null);
-const adminName = staffData?.fullName || "Loading...";
-const role = staffData?.role?.name || "Loading...";
-const department = staffData?.unit?.name || "Loading...";
+  const [staffData, setStaffData] = useState<Staff | null>(null);
+  const [shiftRequests, setShiftRequests] = useState<ShiftRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState<number | null>(null);
 
-useEffect(() => {
-  const fetchStaffData = async () => {
-    try {
-      const staffId = sessionStorage.getItem('staffId');
-      
-      if (!staffId) {
-        console.error('No staff ID found');
-        return;
+  const adminName = staffData?.fullName || "Loading...";
+  const role = staffData?.role?.name || "Loading...";
+  const department = staffData?.unit?.name || "Loading...";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch staff data
+        const staffId = sessionStorage.getItem('staffId');
+        if (staffId) {
+          const response = await api.get(`api/staff/${staffId}`);
+          setStaffData(response.data);
+        }
+
+        // Fetch waiting shift requests
+        const requests = await shiftRequestService.getWaitingRequests();
+        console.log('Shift Requests:', requests);
+        setShiftRequests(requests);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const response = await api.get(`api/staff/${staffId}`);
-      setStaffData(response.data);
+    fetchData();
+  }, []);
+
+  const handleApprove = async (requestId: number) => {
+    try {
+      setActionLoading(requestId);
+      await shiftRequestService.approveRequest(requestId);
+      
+      // Refresh the list
+      const updatedRequests = await shiftRequestService.getWaitingRequests();
+      setShiftRequests(updatedRequests);
     } catch (err) {
-      console.error('Error fetching staff data:', err);
+      console.error('Error approving request:', err);
+      alert('Failed to approve request. Please try again.');
+    } finally {
+      setActionLoading(null);
     }
   };
 
-  fetchStaffData();
-}, []);
+  const handleDecline = async (requestId: number) => {
+    try {
+      setActionLoading(requestId);
+      await shiftRequestService.declineRequest(requestId);
+      
+      // Refresh the list
+      const updatedRequests = await shiftRequestService.getWaitingRequests();
+      setShiftRequests(updatedRequests);
+    } catch (err) {
+      console.error('Error declining request:', err);
+      alert('Failed to decline request. Please try again.');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
 
   const stats = [
     { label: 'Total Employees', value: '248', subtext: '+12 this month' },
@@ -46,12 +92,6 @@ useEffect(() => {
     { name: 'Lisa Anderson', action: 'Clocked in', time: '08:45 AM', dept: 'Sales' }
   ];
 
-  const shiftSwapRequests = [
-    { from: 'John Smith', to: 'Mike Davis', date: 'Oct 5', fromShift: 'Morning', toShift: 'Afternoon', reason: 'Doctor appointment' },
-    { from: 'Sarah Johnson', to: 'Emily Chen', date: 'Oct 7', fromShift: 'Afternoon', toShift: 'Morning', reason: 'Personal matter' },
-    { from: 'Tom Wilson', to: 'Lisa Anderson', date: 'Oct 10', fromShift: 'Morning', toShift: 'Night', reason: 'Family event' }
-  ];
-
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -59,21 +99,19 @@ useEffect(() => {
         <div className="max-w-7xl mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-                        <Link 
-                            to="/" 
-                            className="group flex items-center gap-3 hover:opacity-80 transition-opacity"
-                            aria-label="Folio Home"
-                        >
-                            <div className="relative">
-
-                                {/* Subtle glow effect */}
-                                <div className="absolute inset-0 w-8 h-8 bg-brand/20 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
-                            </div>
-                            <span className="text-xl font-black text-gray-900 tracking-tight">
-                                Folio
-                            </span>
-                        </Link>
-                    </div>
+              <Link 
+                to="/" 
+                className="group flex items-center gap-3 hover:opacity-80 transition-opacity"
+                aria-label="Folio Home"
+              >
+                <div className="relative">
+                  <div className="absolute inset-0 w-8 h-8 bg-brand/20 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
+                </div>
+                <span className="text-xl font-black text-gray-900 tracking-tight">
+                  Folio
+                </span>
+              </Link>
+            </div>
             <div className="flex items-center space-x-3">
               <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-full">
                 <Bell className="w-5 h-5" />
@@ -117,33 +155,31 @@ useEffect(() => {
         </div>
 
         {/* Quick Actions */}
-<div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-  <Link to="/employees">
-    <button className="w-full bg-white border-3 border-black-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
-      <Users className="w-6 h-6 text-gray-700 mx-auto mb-3" />
-      <span className="text-sm font-semibold text-gray-900">Employee Management</span>
-    </button>
-  </Link>
-  
-  <button className="bg-white border-3 border-black-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
-    <FileText className="w-6 h-6 text-gray-700 mx-auto mb-3" />
-    <span className="text-sm font-semibold text-gray-900">Generate Report</span>
-  </button>
-  
-  <button className="bg-white border-3 border-black-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
-    <Clock className="w-6 h-6 text-gray-700 mx-auto mb-3" />
-    <span className="text-sm font-semibold text-gray-900">Shift Management</span>
-  </button>
-  
-  <button className="bg-white border-3 border-black-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
-    <Settings className="w-6 h-6 text-gray-700 mx-auto mb-3" />
-    <span className="text-sm font-semibold text-gray-900">View Attendance</span>
-  </button>
-</div>
-<br />
-<br />
-
-
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <Link to="/employees">
+            <button className="w-full bg-white border-3 border-black-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
+              <Users className="w-6 h-6 text-gray-700 mx-auto mb-3" />
+              <span className="text-sm font-semibold text-gray-900">Employee Management</span>
+            </button>
+          </Link>
+          
+          <button className="bg-white border-3 border-black-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
+            <FileText className="w-6 h-6 text-gray-700 mx-auto mb-3" />
+            <span className="text-sm font-semibold text-gray-900">Generate Report</span>
+          </button>
+          
+          <button className="bg-white border-3 border-black-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
+            <Clock className="w-6 h-6 text-gray-700 mx-auto mb-3" />
+            <span className="text-sm font-semibold text-gray-900">Shift Management</span>
+          </button>
+          
+          <button className="bg-white border-3 border-black-200 rounded-xl p-6 hover:shadow-red-100 hover:shadow-lg hover:border-brand transition-all text-center">
+            <Settings className="w-6 h-6 text-gray-700 mx-auto mb-3" />
+            <span className="text-sm font-semibold text-gray-900">View Attendance</span>
+          </button>
+        </div>
+        <br />
+        <br />
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -177,32 +213,94 @@ useEffect(() => {
             </div>
           </div>
 
-          {/* Pending Shift Swap Requests */}
+          {/* Shift Swap Requests */}
           <div>
             <div className="mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Pending Shift Swap Requests</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Shift Swap Requests</h3>
+              <p className="text-xs text-gray-500 mt-1">Staff-approved requests awaiting final approval</p>
             </div>
-            <div className="space-y-4">
-              {shiftSwapRequests.map((request, i) => (
-                <div key={i} className="bg-white border-2 border-gray-200 rounded-xl p-5 hover:shadow-red-100 hover:shadow-md transition-shadow">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <p className="font-semibold text-gray-900">{request.from} → {request.to}</p>
-                      <p className="text-sm text-gray-500 mt-1">{request.date} · {request.fromShift} to {request.toShift}</p>
-                      <p className="text-xs text-gray-400 mt-1">{request.reason}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 pt-3 border-t border-gray-100">
-                    <button className="flex-1 text-sm font-semibold text-white bg-brand hover:bg-red-600 py-2 px-4 rounded-lg transition-colors">
-                      Approve
-                    </button>
-                    <button className="flex-1 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 py-2 px-4 rounded-lg transition-colors">
-                      Decline
-                    </button>
-                  </div>
+            
+            {loading ? (
+              <div className="bg-white border-2 border-gray-200 rounded-xl p-12 text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand mx-auto"></div>
+                <p className="text-gray-500 mt-4">Loading requests...</p>
+              </div>
+            ) : shiftRequests.length === 0 ? (
+              <div className="bg-white border-2 border-gray-200 rounded-xl p-12 text-center">
+                <div className="flex justify-center mb-4">
+                  <CheckCircle className="w-20 h-20 text-green-500" />
                 </div>
-              ))}
-            </div>
+                <h4 className="text-xl font-semibold text-gray-900 mb-2">All Clear!</h4>
+                <p className="text-gray-500">No shift swap requests waiting for approval</p>
+                <p className="text-xs text-gray-400 mt-2">Requests appear here after staff accept them</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {shiftRequests.map((request) => {
+                  const requesterName = request.requester?.fullName || 'Unknown';
+                  const requestedWithName = request.requestedWith?.fullName || 'Unknown';
+                  const fromShiftName = request.fromShift?.shiftType?.name || 'N/A';
+                  const fromShiftStart = request.fromShift?.shiftType?.startTime || '';
+                  const fromShiftEnd = request.fromShift?.shiftType?.endTime || '';
+                  const toShiftName = request.toShift?.shiftType?.name || 'N/A';
+                  const toShiftStart = request.toShift?.shiftType?.startTime || '';
+                  const toShiftEnd = request.toShift?.shiftType?.endTime || '';
+                  const requesterUnit = request.requester?.unit?.name || 'N/A';
+                  const requestedWithUnit = request.requestedWith?.unit?.name || 'N/A';
+
+                  return (
+                    <div key={request.requestId} className="bg-white border-2 border-gray-200 rounded-xl p-5 hover:shadow-red-100 hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-700 text-xs font-semibold">
+                              {requesterName.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <span className="text-gray-400">→</span>
+                            <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-700 text-xs font-semibold">
+                              {requestedWithName.split(' ').map(n => n[0]).join('')}
+                            </div>
+                          </div>
+                          <p className="font-semibold text-gray-900">
+                            {requesterName} ↔ {requestedWithName}
+                          </p>
+                          <div className="mt-2 space-y-1">
+                            <p className="text-sm text-gray-600">
+                              <span className="font-medium">Date:</span> {formatDate(request.requestDate)}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              <span className="font-medium">Swap:</span> {fromShiftName} {fromShiftStart && fromShiftEnd ? `(${fromShiftStart} - ${fromShiftEnd})` : ''}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              <span className="font-medium">For:</span> {toShiftName} {toShiftStart && toShiftEnd ? `(${toShiftStart} - ${toShiftEnd})` : ''}
+                            </p>
+                            <p className="text-xs text-gray-400 mt-2">
+                              {requesterUnit} · {requestedWithUnit}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 pt-3 border-t border-gray-100">
+                        <button 
+                          onClick={() => handleApprove(request.requestId)}
+                          disabled={actionLoading === request.requestId}
+                          className="flex-1 text-sm font-semibold text-white bg-brand hover:bg-red-600 py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {actionLoading === request.requestId ? 'Processing...' : 'Approve'}
+                        </button>
+                        <button 
+                          onClick={() => handleDecline(request.requestId)}
+                          disabled={actionLoading === request.requestId}
+                          className="flex-1 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {actionLoading === request.requestId ? 'Processing...' : 'Decline'}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       </main>
